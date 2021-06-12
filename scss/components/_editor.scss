@@ -1,0 +1,12 @@
+.editor {
+  height: 100%;
+  display: flex;
+
+  &__sidebar {
+    width: 300px;
+  }
+
+  &__content {
+    flex: 1 1 auto;
+  }
+}

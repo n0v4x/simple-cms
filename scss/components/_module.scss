@@ -1,0 +1,40 @@
+.module {
+  $primary-color: #ffe3d2;
+  $secondary-color: #ffc29d;
+  $border-width: 5px;
+
+  --primary-color: #{$primary-color};
+  --border-width: 5px;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1 1 auto;
+
+  border: $border-width solid var(--primary-color);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1);
+
+  &:hover {
+    --primary-color: #{$secondary-color};
+  }
+
+  &__header {
+    display: flex;
+
+    padding: $border-width 0;
+    background-color: var(--primary-color);
+  }
+
+  &__title {
+    line-height: 1;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
+  &--type-layout {
+  }
+}

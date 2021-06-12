@@ -1,0 +1,58 @@
+.modal {
+  $transition-duration: 0.4s;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+
+  &__inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+    visibility: hidden;
+    transition: visibility 0s $transition-duration;
+    pointer-events: all;
+  }
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity $transition-duration;
+  }
+
+  &__dialog {
+    position: relative;
+    padding: 10px;
+    background-color: #fff;
+    transform: translate3d(0, -100%, 0);
+    transition: transform $transition-duration;
+  }
+
+  &.is-open & {
+    &__inner {
+      visibility: visible;
+      transition: visibility 0s 0s;
+    }
+
+    &__background {
+      opacity: 1;
+    }
+
+    &__dialog {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+}

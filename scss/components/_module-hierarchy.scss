@@ -1,0 +1,12 @@
+.module-hierarchy {
+  padding: 10px;
+  &__list {
+    list-style: none;
+
+    // border-bottom: 1px solid black;
+  }
+
+  // &__item:not(:last-child) {
+  //   margin-bottom: 10px;
+  // }
+}
