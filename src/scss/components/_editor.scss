@@ -2,11 +2,43 @@
   height: 100%;
   display: flex;
 
-  &__sidebar {
+  &__panel {
     width: 300px;
   }
 
-  &__content {
+  &__viewport {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
+
+    background-color: rgb(245, 245, 245);
+  }
+
+  &__viewport-menubar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    height: 25px;
+  }
+
+  &__viewport-modules {
+    padding-top: 25px;
+    flex: 1 1 auto;
+    padding: 50px;
+    overflow: auto;
+  }
+
+  &__viewport-modules-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+
+    background-color: rgb(245, 245, 245);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 }

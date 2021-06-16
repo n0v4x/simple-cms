@@ -1,0 +1,14 @@
+.panel {
+  &__section-header {
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &__section-body {
+    // padding: 10px;
+  }
+
+  &__section-title {
+    font-weight: 600;
+  }
+}

@@ -8,10 +8,10 @@ import ModalFooter from './ModalFooter'
 import ModalHeader from './ModalHeader'
 
 interface Props extends Pick<ModalProps, "open" | "onClose"> {
-
+  onAdd: (module: Module) => void;
 }
 
-const AddModuleModal = ({ open, onClose }: Props) => {
+const AddModuleModal = ({ open, onClose, onAdd }: Props) => {
   const [selected, setSelected] = useState<{
     category: string | null,
     moduleIndex: number | null
@@ -46,6 +46,14 @@ const AddModuleModal = ({ open, onClose }: Props) => {
     return result;
   }, []);
 
+  const handleAddClick = () => {
+    const { category, moduleIndex } = selected;
+
+    if (category !== null && moduleIndex !== null) {
+      onAdd(modulesByCategory[category][moduleIndex]);
+    }
+  }
+
   return (
     <Modal onClose={onClose} open={open}>
       <ModalDialog>
@@ -54,7 +62,7 @@ const AddModuleModal = ({ open, onClose }: Props) => {
           <ModuleLibrary modulesByCategory={modulesByCategory} onSelect={handleModuleLibrarySelect} selected={selected} />
         </ModalContent>
         <ModalFooter>
-          <button className="button">
+          <button onClick={handleAddClick} className="button">
             add
           </button>
         </ModalFooter>

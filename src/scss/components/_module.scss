@@ -1,6 +1,6 @@
 .module {
-  $primary-color: #ffe3d2;
-  $secondary-color: #ffc29d;
+  $primary-color: #e0efff;
+  $secondary-color: #c1dfff;
   $border-width: 5px;
 
   --primary-color: #{$primary-color};
@@ -10,12 +10,19 @@
   flex-direction: column;
 
   flex: 1 1 auto;
+  height: 100%;
 
   border: $border-width solid var(--primary-color);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
 
   &:hover {
     --primary-color: #{$secondary-color};
+  }
+
+  &__inner {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
   }
 
   &__header {
@@ -33,6 +40,10 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
+
+    & > * {
+      flex: 1 1 auto;
+    }
   }
 
   &--type-layout {

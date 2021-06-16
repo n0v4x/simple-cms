@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "parentId": 0,
+    "module": {
+      "id": "layout",
+      "properties": {}
+    }
+  },
+  {
+    "id": 2,
+    "module": {
+      "id": "section",
+      "properties": {}
+    },
+    "parentId": 1
+  },
+  {
+    "id": 3,
+    "module": {
+      "id": "container",
+      "properties": {}
+    },
+    "parentId": 2
+  },
+  {
+    "id": 4,
+    "module": {
+      "id": "section",
+      "properties": {}
+    },
+    "parentId": 1
+  },
+  {
+    "id": 5,
+    "module": {
+      "id": "section",
+      "properties": {}
+    },
+    "parentId": 1
+  }
+]
