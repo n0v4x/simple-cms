@@ -1,70 +1,85 @@
-import { MutableRefObject, ReactNode, useState } from "react";
+import { memo, MutableRefObject, ReactNode, useMemo, useState } from "react";
 import classNames from "classnames";
 import { ModuleHierarchyGeneralProps } from "./ModuleHierarchy";
 
-import { MoreHorizontal, Plus, ChevronDown, Trash } from "react-feather";
+import { MoreHorizontal, MoreVertical, Plus, ChevronDown, Trash } from "react-feather";
 import useModule from "@hooks/useModule";
+import PopupMenu from "@components/common/PopupMenu";
 
 
-interface ModuleHierarchyItemProps extends ModuleHierarchyGeneralProps {
+interface ModuleHierarchyItemProps {
   level: number;
   item: ModuleData;
   children?: ReactNode;
   isSelected?: boolean;
   hasChildren?: boolean;
+  onSelect: () => void;
+  onDelete: () => void;
+  onAdd: () => void;
 }
 
-const ModuleHierarchyItem = ({ item, level, children, isSelected, onAction, hasChildren }: ModuleHierarchyItemProps) => {
+const ModuleHierarchyItem = ({ item, level, children, isSelected, hasChildren, onAdd, onDelete, onSelect }: ModuleHierarchyItemProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isPopupMenuActive, setIsPopupMenuActive] = useState(false);
   const module = useModule(item.module.id);
 
   if (!module) {
     return null;
   }
 
-  const getHandler = (type: Parameters<ModuleHierarchyGeneralProps["onAction"]>[0]["type"]) => () => {
-    onAction({
-      type,
-      payload: {
-        id: item.id
-      }
-    })
-  }
-
-  const handleCollapseClick = () => {
+  const handleCollapse = () => {
     setIsCollapsed(oldState => !oldState);
   }
+
+  const headerStyle = useMemo(() => {
+    return {
+      paddingLeft: 10 * (level + 1)
+    }
+  }, [level]);
 
   return <li className={classNames(
     "module-hierarchy-item",
     {
       "is-selected": isSelected,
-      "is-collapsed": isCollapsed
+      "is-collapsed": isCollapsed,
+      "has-children": hasChildren
     }
   )}>
     <div className="module-hierarchy-item__inner">
-      <div onClick={getHandler("select")} style={{ paddingLeft: 10 * (level + 1) }} className="module-hierarchy-item__header">
+      <div onClick={onSelect} draggable style={headerStyle} className="module-hierarchy-item__header">
         <div className="module-hierarchy-item__header-inner">
 
           <div className="module-hierarchy-item__header-left">
-            {hasChildren && <button onClick={handleCollapseClick} className="button module-hierarchy-item__collapse-btn">
+            {hasChildren && <button onClick={handleCollapse} className="button module-hierarchy-item__collapse-btn">
               <ChevronDown size="1em" />
             </button>}
           </div>
-          <p className="module-hierarchy-item__name">
-            {module.name}
-          </p>
+          <div className="module-hierarchy-item__meta">
+            <p className="module-hierarchy-item__id">
+              {`${module.id}-${item.id}`}
+            </p>
+            <p className="module-hierarchy-item__name">
+              {module.name}
+            </p>
+          </div>
+
+          {/* <div className="module-hierarchy-item__control-list">
+            <button onClick={() => setIsPopupMenuActive((oldState) => !oldState)} className="button">
+              <MoreVertical size="1em" />
+            </button>
+            <PopupMenu className="module-hierarchy-item__popup-menu" onClick={(id) => console.log("id")} show={true} items={[{ id: "add", label: "Add" }, { id: "delete", label: "Delete" }]} />
+          </div> */}
           <ul className="module-hierarchy-item__control-list list">
             <li className="module-hierarchy-item__control-item">
-              <button onClick={getHandler("delete")} className="button">
+              <button onClick={onDelete} className="button">
                 <Trash size="1em" />
               </button>
             </li>
-            <div className="module-hierarchy-item__control-item">
-              <button onClick={getHandler("add")} className="button">
+            {module.hasChildren && <li className="module-hierarchy-item__control-item">
+              <button onClick={onAdd} className="button">
                 <Plus size="1em" />
               </button>
-            </div>
+            </li>}
           </ul>
         </div>
       </div>
@@ -75,4 +90,4 @@ const ModuleHierarchyItem = ({ item, level, children, isSelected, onAction, hasC
   </li>
 }
 
-export default ModuleHierarchyItem;
+export default memo(ModuleHierarchyItem);

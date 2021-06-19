@@ -1,0 +1,28 @@
+.module-properties {
+  padding: 0 10px;
+
+  &__property-name {
+    font-weight: 500;
+  }
+
+  &__property-header {
+    // padding: 10px 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  &__property-description {
+    color: $text-secondary-color;
+    margin-top: 4px;
+
+    font-size: 14px;
+  }
+
+  &__property {
+    padding: 10px 0;
+  }
+
+  &__property:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

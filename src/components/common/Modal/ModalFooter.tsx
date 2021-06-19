@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react'
+import classNames from "classnames";
 
 interface ModalFooterProps {
-  children?: ReactNode
+  children?: ReactNode;
+  className?: string;
 }
 
-const ModalFooter = ({ children }: ModalFooterProps) => {
+const ModalFooter = ({ children, className }: ModalFooterProps) => {
   return (
-    <div className="modal__footer">
+    <div className={classNames("modal__footer", className)}>
       {children}
     </div>
   )

@@ -1,14 +1,24 @@
 .panel {
-  &__section-header {
-    padding: 15px 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  overflow: hidden;
+
+  &__header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    height: 45px;
+    padding: 0 $edges-padding-md;
   }
 
-  &__section-body {
-    // padding: 10px;
-  }
-
-  &__section-title {
-    font-weight: 600;
+  &__body {
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 }

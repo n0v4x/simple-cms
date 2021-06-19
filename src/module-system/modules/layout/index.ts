@@ -1,21 +1,11 @@
 import Layout from "./Layout";
-import widthProperty from "@module-system/properties/width";
 
-export interface LayoutProperties extends ModuleProperties {
-  width: ModulePropertiesItem<typeof widthProperty>
-}
-
-const layout: Module<LayoutProperties> = {
+const layout: Module = {
   id: "layout",
   name: "Layout",
   description: "Layout module",
   category: "layout",
-  properties: {
-    width: {
-      name: "Width",
-      property: widthProperty
-    }
-  },
+  hasChildren: true,
   component: Layout,
 }
 

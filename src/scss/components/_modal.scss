@@ -8,6 +8,8 @@
   width: 100%;
   pointer-events: none;
 
+  z-index: 1000;
+
   &__inner {
     position: absolute;
     top: 0;
@@ -35,10 +37,35 @@
 
   &__dialog {
     position: relative;
-    padding: 10px;
+    padding: 30px 15px;
     background-color: #fff;
     transform: translate3d(0, -100%, 0);
-    transition: transform $transition-duration;
+    transition: all $transition-duration;
+    opacity: 0;
+  }
+
+  &__title {
+    margin-bottom: 5px;
+    font-size: 30px;
+  }
+
+  &__subtitle {
+    color: $text-secondary-color;
+  }
+
+  &__header {
+    position: relative;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   &.is-open & {
@@ -52,6 +79,7 @@
     }
 
     &__dialog {
+      opacity: 1;
       transform: translate3d(0, 0, 0);
     }
   }

@@ -1,10 +1,5 @@
 .module {
-  $primary-color: #e0efff;
-  $secondary-color: #c1dfff;
-  $border-width: 5px;
-
-  --primary-color: #{$primary-color};
-  --border-width: 5px;
+  $border-width: 4px;
 
   display: flex;
   flex-direction: column;
@@ -12,40 +7,76 @@
   flex: 1 1 auto;
   height: 100%;
 
-  border: $border-width solid var(--primary-color);
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
-
-  &:hover {
-    --primary-color: #{$secondary-color};
-  }
+  border: $border-width solid $primary-color-lighter;
+  // box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
+  user-select: none;
+  cursor: pointer;
 
   &__inner {
     flex: 1 1 auto;
     display: flex;
+    height: 100%;
     flex-direction: column;
   }
 
   &__header {
     display: flex;
 
-    padding: $border-width 0;
-    background-color: var(--primary-color);
+    padding: 0 0 $border-width 0;
+    background-color: $primary-color-lighter;
   }
 
   &__title {
     line-height: 1;
+    font-size: 14px;
   }
 
   &__body {
+    min-height: 10px;
+    flex: 1 1 auto;
+  }
+
+  &.is-selected {
+    border-color: $primary-color;
+  }
+
+  &.is-selected > &__inner > &__header {
+    background-color: $primary-color;
+  }
+
+  &.is-selected.show-box-model > &__inner > &__body {
+    box-shadow: 0 0 0 1px rgb(255, 168, 47);
+  }
+  &.is-selected.show-box-model > &__inner > &__body > &__layout {
+    box-shadow: 0 0 0 1px rgb(88, 221, 35);
+  }
+
+  &.is-selected.show-box-model
+    > &__inner
+    > &__body
+    > &__layout
+    > &__layout-content {
+    box-shadow: 0 0 0 1px rgb(70, 135, 255);
+  }
+
+  &__layout-content {
+    height: 100%;
+  }
+
+  &__layout-content.is-empty {
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 10px;
+    text-shadow: 0.5px 0.5px 0 rgb(255, 255, 255);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__box-model {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-
-    & > * {
-      flex: 1 1 auto;
-    }
-  }
-
-  &--type-layout {
   }
 }

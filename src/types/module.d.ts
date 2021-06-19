@@ -9,40 +9,36 @@ interface ModuleData extends TreeDataItem {
   }
 }
 
-interface ModuleProps<P extends ModuleProperties> {
-  properties: {
-    [K in keyof P]: P[K] extends ModulePropertiesItem ? P[K]["property"]["defaultData"] : undefined
-  },
-  children?: ReactNode
+interface ModuleProps<P extends any = any> {
+  id?: string;
+  properties?: P,
+  children?: ReactNode,
+  className?: string,
 }
 
-interface ModulePropertiesItem<SP extends ModuleProperty = ModuleProperty> {
-  name: string;
+interface ModulePropertiesItem {
+  id: string;
+  name?: string;
   description?: string
-  property: SP
+  property: ModuleProperty
 }
 
-interface ModuleProperties {
-  [key: string]: ModulePropertiesItem
-}
-
-interface Module<P extends ModuleProperties | undefined = undefined> {
+interface Module {
   id: string;
   name: string;
   category?: string;
+  hasChildren: boolean;
   description: string;
-  properties?: P,
-  component: (props: ModuleProps<P>) => JSX.Element
+  properties?: ModulePropertiesItem[],
+  component: (props: ModuleProps) => JSX.Element
 }
 
 interface ModulePropertyProps<T> {
-  onChange: ({
-    data
-  }: T) => void
+  onChange: (data: T) => void
   data: T,
 }
 
-interface ModuleProperty<T = any> {
+interface ModuleProperty<T extends any = any> {
   name: string,
   description?: string,
   component: (props: ModulePropertyProps<T>) => JSX.Element,

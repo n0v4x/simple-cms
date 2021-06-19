@@ -6,11 +6,18 @@ interface ModuleHierarchyListProps extends ModuleHierarchyGeneralProps {
   items: ModuleData[],
   parentId?: ModuleData["parentId"],
   level?: number,
-  selected?: ModuleData["id"]
+  selected?: ModuleData | null,
+  onSelect: (id: ModuleData["id"]) => void;
+  onDelete: (id: ModuleData["id"]) => void;
+  onAdd: (id: ModuleData["id"]) => void;
 }
 
-const ModuleHierarchyList = ({ items, parentId = 0, level = 0, selected, onAction }: ModuleHierarchyListProps) => {
+const ModuleHierarchyList = ({ items, parentId = 0, level = 0, selected, onAdd, onDelete, onSelect }: ModuleHierarchyListProps) => {
   const currentLevelItems = items.filter((item) => item.parentId === parentId)
+
+  if (currentLevelItems.length === 0) {
+    return null;
+  }
 
   return (
     <ul className="module-hierarchy__list">
@@ -19,17 +26,20 @@ const ModuleHierarchyList = ({ items, parentId = 0, level = 0, selected, onActio
           level={level}
           item={currentLevelItem}
           key={currentLevelItem.id}
-          isSelected={selected === currentLevelItem.id}
+          isSelected={!!selected && selected.id === currentLevelItem.id}
           hasChildren={items.findIndex(child => child.parentId === currentLevelItem.id) !== -1}
-          onAction={onAction}
+          onAdd={() => onAdd(currentLevelItem.id)}
+          onDelete={() => onDelete(currentLevelItem.id)}
+          onSelect={() => onSelect(currentLevelItem.id)}
         >
           <ModuleHierarchyList
             items={items}
             level={level + 1}
             selected={selected}
-
             parentId={currentLevelItem.id}
-            onAction={onAction}
+            onAdd={onAdd}
+            onDelete={onDelete}
+            onSelect={onSelect}
           />
         </ModuleHierarchyItem>
       })}

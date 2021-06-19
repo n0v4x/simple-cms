@@ -6,16 +6,12 @@ interface ModulePropertyHeightProps extends ModulePropertyProps<ModulePropertyHe
 
 const ModulePropertyHeight = ({ data, onChange }: ModulePropertyHeightProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const { name, value } = e.target;
-    onChange({
-      ...data,
-      [name]: value
-    })
+    onChange(e.target.value)
   }
 
   return (
     <div className="module-property">
-      <input name="height" type="text" placeholder="Height" value={data.height} onChange={handleChange} />
+      <input name="height" type="text" placeholder="Height" value={data} onChange={handleChange} />
     </div>
   )
 }

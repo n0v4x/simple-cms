@@ -1,0 +1,13 @@
+.separator {
+  display: block;
+  width: 100%;
+
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+
+  margin: $edges-padding-md 0;
+
+  &--row {
+    margin: 0 $edges-padding-md;
+  }
+}

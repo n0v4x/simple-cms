@@ -1,0 +1,15 @@
+.module-viewport {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow: hidden;
+
+  background-color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+  &__list {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+}

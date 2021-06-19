@@ -7,3 +7,25 @@ body,
 body {
   font-family: "Montserrat", sans-serif;
 }
+
+input[type="text"] {
+  border: none;
+  background-color: $primary-color-lighter;
+  width: 100%;
+  display: block;
+  box-shadow: inset 1px 0 0 0 $primary-color;
+  padding: 10px;
+
+  transition: all 0.2s;
+
+  &:focus {
+    outline: none;
+
+    box-shadow: inset 3px 0 0 0 $primary-color;
+    background-color: $primary-color-light;
+  }
+
+  &::placeholder {
+    color: $text-secondary-color;
+  }
+}

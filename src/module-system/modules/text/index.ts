@@ -1,23 +1,26 @@
 import background from "@module-system/properties/background";
 import text from "@module-system/properties/text";
+import verticalAlignment from "@module-system/properties/vertical-alignment";
 import Text from './Text';
 
-export interface TextProperties extends ModuleProperties {
-  text: ModulePropertiesItem<typeof text>
-}
-
-const layout: Module<TextProperties> = {
+const layout: Module = {
   id: "text",
   name: "Text",
   description: "Text",
   category: "text",
-  properties: {
-    text: {
+  hasChildren: false,
+  properties: [
+    {
+      id: "text",
       name: "Text",
       description: "Text",
       property: text
     },
-  },
+    {
+      id: "verticalAlignment",
+      property: verticalAlignment
+    }
+  ],
   component: Text,
 }
 

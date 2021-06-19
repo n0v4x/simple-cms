@@ -7,7 +7,7 @@ const useModule = (moduleId: Module["id"] | undefined) => {
       return null;
     }
 
-    const result: Module<ModuleProperties | undefined> = getModule(moduleId);
+    const result: Module = getModule(moduleId);
 
     return result;
   }, [moduleId]);

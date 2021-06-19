@@ -13,15 +13,12 @@
     flex: 1 1 auto;
 
     background-color: rgb(245, 245, 245);
+
+    user-select: none;
   }
 
-  &__viewport-menubar {
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: black;
-    height: 25px;
+  &__hierarchy {
+    overflow-y: auto;
   }
 
   &__viewport-modules {
@@ -31,14 +28,19 @@
     overflow: auto;
   }
 
-  &__viewport-modules-inner {
+  &__viewport-footer {
+    padding: 10px;
     display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    border-radius: 5px;
-    overflow: hidden;
+    justify-content: flex-end;
+  }
 
-    background-color: rgb(245, 245, 245);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  &__hierarchy-controls {
+    margin-top: auto;
+    padding: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &__hierarchy-control-add-button {
+    display: block;
   }
 }

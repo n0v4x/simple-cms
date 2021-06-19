@@ -17,42 +17,44 @@ const ModuleLibrary = ({ modulesByCategory, onSelect, selected }: ModuleLibraryP
   }
 
   return <div className="module-library">
-    <ul className="module-library__category-list list">
-      {Object.entries(modulesByCategory).map(([category, modules], categoryIndex) => {
-        return <li key={categoryIndex} className="module-library__category-list-item">
-          <div className="module-library__category">
-            <div className="module-library__category-header">
-              <h3 className="module-library__category-name">
-                {category}
-              </h3>
-            </div>
+    <div className="module-library__inner">
+      <ul className="module-library__category-list list">
+        {Object.entries(modulesByCategory).map(([category, modules], categoryIndex) => {
+          return <li key={categoryIndex} className="module-library__category-list-item">
+            <div className="module-library__category">
+              <div className="module-library__category-header">
+                <h3 className="module-library__category-name">
+                  {category}
+                </h3>
+              </div>
 
-            <div className="module-library__category-body">
-              <ul className="module-library__module-list list">
-                {modules.map((module, moduleIndex) => {
-                  return <li key={moduleIndex} className="module-library__module-list-item">
-                    <button
-                      onClick={getModuleClickHandler(category, moduleIndex)}
-                      className={classNames(
-                        "module-library__module button",
-                        {
-                          "is-selected": selected.category === category && selected.moduleIndex === moduleIndex
-                        }
-                      )}>
-                      <div className="module-library__module-header">
-                        <h4 className="module-library__module-name">
-                          {module.name}
-                        </h4>
-                      </div>
-                    </button>
-                  </li>
-                })}
-              </ul>
+              <div className="module-library__category-body">
+                <ul className="module-library__module-list list">
+                  {modules.map((module, moduleIndex) => {
+                    return <li key={moduleIndex} className="module-library__module-list-item">
+                      <button
+                        onClick={getModuleClickHandler(category, moduleIndex)}
+                        className={classNames(
+                          "module-library__module button",
+                          {
+                            "is-selected": selected.category === category && selected.moduleIndex === moduleIndex
+                          }
+                        )}>
+                        <div className="module-library__module-header">
+                          <h4 className="module-library__module-name">
+                            {module.name}
+                          </h4>
+                        </div>
+                      </button>
+                    </li>
+                  })}
+                </ul>
+              </div>
             </div>
-          </div>
-        </li>
-      })}
-    </ul>
+          </li>
+        })}
+      </ul>
+    </div>
   </div>
 }
 

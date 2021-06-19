@@ -1,0 +1,21 @@
+.menu {
+  // &__list {
+  //   padding: $edges-padding-sm 0;
+  // }
+  &__item {
+    height: 40px;
+    padding: 0 $edges-padding-md;
+    transition: all 0.4s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background-color: $primary-color-lighter;
+    }
+
+    &.is-selected {
+      background-color: $primary-color;
+    }
+  }
+}

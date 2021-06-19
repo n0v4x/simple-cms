@@ -1,0 +1,19 @@
+.label-switch {
+  color: $text-secondary-color;
+  font-size: 14px;
+  text-transform: uppercase;
+
+  &__label {
+    cursor: pointer;
+  }
+
+  &__label-separator {
+    margin: 0 10px;
+    display: inline-block;
+  }
+
+  &__label.is-active {
+    color: $primary-color;
+    text-shadow: 0 0 1px $primary-color;
+  }
+}

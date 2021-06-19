@@ -1,0 +1,50 @@
+.checkbox {
+  display: block;
+  position: relative;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+  user-select: none;
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  &__checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $primary-color-lighter;
+    border-radius: 3px;
+    justify-content: center;
+  }
+
+  &__checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 60%;
+    height: 60%;
+    border-radius: 1px;
+    margin: auto;
+    background-color: $primary-color;
+  }
+
+  &:hover &__checkmark {
+    background-color: $primary-color-light;
+  }
+
+  & &__input:checked ~ &__checkmark:after {
+    display: block;
+  }
+}

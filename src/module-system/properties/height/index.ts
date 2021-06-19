@@ -1,14 +1,12 @@
 import Height from "./Height";
 
-export interface ModulePropertyHeightData {
-  height: string;
-}
+export type ModulePropertyHeightData = string;
 
-export default {
+const height: ModuleProperty<ModulePropertyHeightData> = {
   name: "Height",
   description: "Height of the module",
   component: Height,
-  defaultData: {
-    height: ""
-  }
-} as ModuleProperty<ModulePropertyHeightData>
+  defaultData: ""
+}
+
+export default height;

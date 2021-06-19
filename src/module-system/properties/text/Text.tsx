@@ -13,15 +13,12 @@ interface ModulePropertyHeightProps extends ModulePropertyProps<ModulePropertyTe
 }
 
 const ModulePropertyHeight = ({ data, onChange }: ModulePropertyHeightProps) => {
-  console.log(data);
   const handleChange = (text: string) => {
-    onChange({
-      text
-    })
+    onChange(text)
   }
 
   return <div className="module-property">
-    <JoditEditor value={data.text} onChange={handleChange} />
+    <JoditEditor value={data} onChange={handleChange} />
   </div>
 }
 

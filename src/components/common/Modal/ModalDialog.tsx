@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react'
+import classNames from "classnames";
 
 interface ModalDialogProps {
-  children?: ReactNode
+  children?: ReactNode;
+  className?: string;
 }
 
-const ModalDialog = ({ children }: ModalDialogProps) => {
+const ModalDialog = ({ children, className }: ModalDialogProps) => {
   return (
-    <div className="modal__dialog">
+    <div className={classNames("modal__dialog", className)}>
       {children}
     </div>
   )

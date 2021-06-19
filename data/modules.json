@@ -11,7 +11,9 @@
     "id": 2,
     "module": {
       "id": "section",
-      "properties": {}
+      "properties": {
+        "height": "100vh"
+      }
     },
     "parentId": 1
   },
@@ -27,16 +29,36 @@
     "id": 4,
     "module": {
       "id": "section",
-      "properties": {}
+      "properties": {
+        "height": "100vh"
+      }
     },
     "parentId": 1
   },
   {
     "id": 5,
     "module": {
-      "id": "section",
+      "id": "container",
       "properties": {}
     },
+    "parentId": 4
+  },
+  {
+    "id": 6,
+    "module": {
+      "id": "section",
+      "properties": {
+        "height": "100vh"
+      }
+    },
     "parentId": 1
+  },
+  {
+    "id": 7,
+    "module": {
+      "id": "container",
+      "properties": {}
+    },
+    "parentId": 6
   }
 ]

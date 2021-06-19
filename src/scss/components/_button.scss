@@ -1,6 +1,42 @@
 .button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   background-color: transparent;
   font-family: inherit;
   cursor: pointer;
+
+  &--solid {
+    background-color: $primary-color-light;
+    padding: 10px 20px;
+    transition: all 0.2s;
+    border-radius: 2px;
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
+
+  &--circle {
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    transition: background-color 0.4s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &.is-disabled {
+    background-color: $primary-color-light;
+    cursor: default;
+  }
+  &--block {
+    display: block;
+    width: 100%;
+  }
 }

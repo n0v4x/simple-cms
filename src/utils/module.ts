@@ -1,10 +1,14 @@
+export const findChildrenModules = <T extends any>(modules: ModuleData[], id: ModuleData["id"], returnCb?: (module: ModuleData, i: number) => T) => {
+  const result: T[] = [];
+  const parentIds: ModuleData["id"][] = [id];
 
+  modules.forEach((module, i) => {
+    if (parentIds.indexOf(module.parentId) !== -1) {
+      parentIds.push(module.id);
 
+      result.push(returnCb ? returnCb(module, i) : (module as T));
+    }
+  });
 
-export const makeTreeData = <T extends TreeDataItem>(dataList: T[]): T[] => {
-  return dataList.map((item) => ({
-    ...item,
-    hasChildren:
-      dataList.filter((i) => i.parentId === item.id).length > 0,
-  }));
+  return result;
 }

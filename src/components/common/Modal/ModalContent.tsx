@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react'
+import classNames from "classnames";
 
 interface ModalContentProps {
-  children: ReactNode
+  children: ReactNode;
+  className?: string;
 }
 
-const ModalContent = ({ children }: ModalContentProps) => {
+const ModalContent = ({ children, className }: ModalContentProps) => {
   return (
-    <div className="modal__content">
+    <div className={classNames("modal__content", className)}>
       {children}
     </div>
   )

@@ -1,14 +1,12 @@
 import Text from "./Text";
 
-export interface ModulePropertyTextData {
-  text: string;
-}
+export type ModulePropertyTextData = string;
 
-export default {
+const text: ModuleProperty<ModulePropertyTextData> = {
   name: "Text",
   description: "Text of the module",
   component: Text,
-  defaultData: {
-    text: ""
-  }
-} as ModuleProperty<ModulePropertyTextData>
+  defaultData: ""
+}
+
+export default text;

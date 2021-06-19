@@ -1,16 +1,12 @@
 import PropertyWidth from "./PropertyWidth";
 
-interface ModulePropertyWidthData {
-  value: number;
-  unit: string;
-}
+export type ModulePropertyWidthData = string
 
-export default {
+const width: ModuleProperty<ModulePropertyWidthData> = {
   name: "Width",
   description: "Width of the module",
   component: PropertyWidth,
-  defaultData: {
-    value: 0,
-    unit: "px"
-  }
-} as ModuleProperty<ModulePropertyWidthData>
+  defaultData: ""
+}
+
+export default width;

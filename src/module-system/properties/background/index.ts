@@ -6,12 +6,15 @@ export interface ModulePropertyBackgroundData {
   fixed: boolean;
 }
 
-export default {
+const background: ModuleProperty<ModulePropertyBackgroundData> = {
   name: "Background",
   description: "Background of the module",
   component: Background,
   defaultData: {
     size: "",
-    image: ""
+    image: "",
+    fixed: false
   }
-} as ModuleProperty<ModulePropertyBackgroundData>
+}
+
+export default background;

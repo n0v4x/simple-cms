@@ -1,2 +1,0 @@
-import width from "./width";
-

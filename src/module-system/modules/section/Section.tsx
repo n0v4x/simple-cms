@@ -1,29 +1,33 @@
 import background, { ModulePropertyBackgroundData } from "@module-system/properties/background";
 import { CSSProperties, ReactNode } from "react"
-import { SectionProperties } from ".";
+import classNames from "classnames";
 
-
-interface SectionProps extends ModuleProps<SectionProperties> {
+interface SectionProps extends ModuleProps<{
+  background?: {
+    image: string,
+    size: string,
+    fixed: boolean
+  },
+  height?: string
+}> {
 
 }
 
-const Section = ({ children, properties }: SectionProps) => {
-  // const style = properties ? properties.background
+const Section = ({ children, properties, className, id }: SectionProps) => {
   let style: CSSProperties = {};
 
   if (properties) {
-    const { image, size, fixed } = properties.background;
-    const { height } = properties.height;
+    const { image, size, fixed } = properties.background || {};
 
     style = {
-      height,
+      height: properties.height,
       backgroundAttachment: fixed ? "fixed" : "",
       backgroundSize: size,
-      backgroundImage: `url(${image})`
+      backgroundImage: image ? `url(${image})` : ""
     }
   }
 
-  return <div style={style as CSSProperties} className="section">
+  return <div id={id} style={style as CSSProperties} className={classNames("section", className)}>
     {children}
   </div>
 }

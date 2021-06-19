@@ -20,7 +20,10 @@
       "@modules/*": ["src/modules/*"],
       "@data/*": ["data/*"],
       "@module-system/*": ["src/module-system/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@api/*": ["src/api/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

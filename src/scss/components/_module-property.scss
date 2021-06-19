@@ -1,0 +1,27 @@
+.module-property {
+  display: block;
+  &__item {
+    display: flex;
+    flex-direction: column;
+
+    &--horizontal {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__item:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  &__item-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  &__item--horizontal &__item-label {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+}
