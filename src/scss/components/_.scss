@@ -17,7 +17,7 @@
 @import "./scale-range";
 @import "./select";
 @import "./label-switch";
-@import "./module-property";
+@import "./property";
 @import "./checkbox";
 @import "./popup-menu";
 @import "./sidebar";
@@ -27,3 +27,6 @@
 
 @import "./pages/";
 @import "./common/";
+@import "./input";
+@import "./editor-create-page-modal";
+@import "./overlay";

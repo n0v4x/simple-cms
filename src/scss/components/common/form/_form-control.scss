@@ -1,4 +1,21 @@
 .form-control {
   display: flex;
   flex-direction: column;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
+  &__label {
+    font-size: 14px;
+    color: rgb(194, 194, 194);
+    margin-bottom: 5px;
+  }
+
+  &__error {
+    white-space: nowrap;
+    margin-top: 3px;
+    font-size: 11px;
+    color: rgb(255, 114, 114);
+  }
 }

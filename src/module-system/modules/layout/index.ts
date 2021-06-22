@@ -1,4 +1,5 @@
 import Layout from "./Layout";
+import properties from "./properties";
 
 const layout: Module = {
   id: "layout",
@@ -6,6 +7,7 @@ const layout: Module = {
   description: "Layout module",
   category: "layout",
   hasChildren: true,
+  properties,
   component: Layout,
 }
 

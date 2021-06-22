@@ -1,11 +1,17 @@
 import Modal, { ModalContent, ModalDialog, ModalHeader, ModalProps } from '@components/common/Modal'
-import React, { FC } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { FC, useMemo } from 'react'
+import { useForm } from 'react-hook-form';
+
+import cloneDeep from "lodash/cloneDeep"
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import Form, { FromControl } from '@components/common/Form';
 import Input from '@components/common/Input';
+import { useApi } from '@contexts/ApiProvider';
+
+import * as data from "@data/index"
+import { useEditor, useEditorState } from './Editor';
 
 interface FormFields {
   url: string;
@@ -14,76 +20,87 @@ interface FormFields {
 }
 
 const schema = yup.object().shape({
-  url: yup.string().required().matches(/^(\/([a-z0-9-_])+)+$/),
+  url: yup.string().required().matches(/^((\/([a-z0-9-_])+)+|\/)$/),
   title: yup.string().required(),
   templateId: yup.string()
 });
 
-interface EditorCreatePageModalProps extends Pick<ModalProps, "open" | "onClose"> {
-  templates?: TemplateData[];
-  onAdd?: (data: FormFields) => void
-}
-
-const EditorCreatePageModal = ({ open, onClose, onAdd: onCreate, templates }: EditorCreatePageModalProps) => {
+interface EditorCreatePageModalProps { }
+const EditorCreatePageModal = ({ }: EditorCreatePageModalProps) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormFields>({
     resolver: yupResolver(schema)
   });
+  const editorState = useEditorState();
+  const editor = useEditor();
+  const api = useApi();
 
-  const onSubmit = (data: FormFields) => {
-    if (onCreate) {
-      onClose();
-      onCreate(data);
-      reset();
+  const onSubmit = ({ title, url, templateId }: FormFields) => {
+    const template = data.templates.find(template => template.id === templateId);
+    let modules: ModuleData[] = [];
+
+    if (template?.modules) {
+      modules = template.modules.map(moduleData => cloneDeep(moduleData))
     }
+
+    const newPage: PageData = {
+      id: Date.now().toString(),
+      title,
+      url,
+      modules
+    }
+
+    reset();
+
+    editor.closeCreatePageModal();
+    editor.addPage(newPage)
+
+    // api.services.page.create(data).then(result => {
+    //   if (result.success === 1) {
+    //     onClose();
+    //     onAdd(result.data);
+    //   }
+    // });
   }
 
   const formControls: {
     label: string;
     name: keyof FormFields,
-    component: typeof Input
   }[] = [{
     label: "Url",
     name: "url",
-    component: Input
   },
   {
     label: "Title",
     name: "title",
-    component: Input
   }]
 
+  const templatesOptions = useMemo(() => {
+    return [{ value: "", label: "none" }, ...data.templates.map(template => ({ value: template.id, label: template.name }))]
+  }, []);
+
+
   return (
-    <Modal className="editor-create-page-modal" open={open} onClose={onClose}>
-      {/* <ModalHeader>
-
-      </ModalHeader> */}
+    <Modal className="editor-create-page-modal" open={editorState.isCreatePageModalOpen} onClose={editor.closeCreatePageModal}>
       <ModalDialog>
-        <ModalContent>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            {formControls.map((formControl, i) => {
-              const Component = formControl.component;
+        <ModalHeader className="editor-create-page-modal__header" onClose={editor.closeCreatePageModal} title="Add page" subtitle="Add new page" />
 
+        <ModalContent className="editor-create-page-modal__content">
+          <Form className="editor-create-page-modal__form" onSubmit={handleSubmit(onSubmit)}>
+            {formControls.map((formControl, i) => {
               return <FromControl key={i} label={formControl.label} error={errors[formControl.name]?.message}>
-                <Component {...register(formControl.name)} />
+                <Input inputType="text" {...register(formControl.name)} />
               </FromControl>
             })}
 
-            <select {...register("templateId")}>
-              <option value="">
-                none
-              </option>
-              {templates && templates?.map(template => {
-                return <option key={template.id} value={template.id}>
-                  {template.name}
-                </option>
-              })}
-            </select>
+            <FromControl label="Template" error={errors["templateId"]?.message}>
+              <Input
+                options={templatesOptions}
+                {...register("templateId")}
+                inputType="select"
+              />
+            </FromControl>
 
-            {/* <FromControl label="Title" error={errors.title?.message}>
-              <Input {...register("title")} />
-            </FromControl> */}
-
-            <button type="submit">
+            <button className="editor-create-page-modal__submit-btn button button--solid" type="submit">
               Create
             </button>
           </Form>

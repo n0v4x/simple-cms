@@ -1,7 +1,9 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { MouseEventHandler, ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { ModuleViewportGeneralProps } from "./ModuleViewport";
 import useModule from "@hooks/useModule";
+import { cloneDeep } from "lodash";
+import { useModuleProperties } from "@hooks/useModuleProperties";
 
 interface ModuleViewportItemProps extends ModuleViewportGeneralProps {
   item: ModuleData,
@@ -18,6 +20,10 @@ const ModuleItem = ({ item, children, showModulesBoundaries, level, isSelected, 
     return null;
   }
 
+  const properties = useModuleProperties(item);
+
+  console.log({ ...properties });
+
   const Component = module.component;
 
   if (!showModulesBoundaries) {
@@ -28,7 +34,7 @@ const ModuleItem = ({ item, children, showModulesBoundaries, level, isSelected, 
 
   const handleSelect: MouseEventHandler<HTMLDivElement> = (e) => {
     if (onSelect) {
-      onSelect(item);
+      onSelect(item.id);
 
       e.stopPropagation();
     }
@@ -45,7 +51,7 @@ const ModuleItem = ({ item, children, showModulesBoundaries, level, isSelected, 
         </p>
       </header>
       <div className="module__body">
-        <Component id={`${module.id}-${item.id}`} className="module__layout" properties={item.module.properties}>
+        <Component id={`${module.id}-${item.id}`} className="module__layout" properties={properties}>
           <div className={classNames("module__layout-content", { "is-empty": !hasChildren })}>
             {hasChildren ? children : "empty"}
           </div>

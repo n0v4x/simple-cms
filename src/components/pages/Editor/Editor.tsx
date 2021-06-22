@@ -8,8 +8,6 @@ import ModuleProperties from "@components/layout/ModuleProperties";
 import Panel, { PanelHeader } from '@components/common/Panel'
 import ScaleRange from '@components/common/ScaleRange';
 import axios from "axios";
-import api from "@api/index";
-import { useApi } from '@contexts/ApiProvider';
 import usePrevState from '@hooks/usePrevState';
 import classNames from 'classnames';
 import PanelBody from '@components/common/Panel/PanelBody';
@@ -22,21 +20,44 @@ import { Plus } from 'react-feather';
 import Icon from '@components/common/Icon';
 import EditorCreatePageModal from './EditorCreatePageModal';
 import { findChildrenModules } from '@utils/module';
+import Input from '@components/common/Input';
+import PageProperties, { Properties, PagePropertiesProps } from './PageProperties';
 
-
+import {
+  useSafeContext,
+  createSafeConsumer,
+  createSafeContext,
+} from "@contexts/helpers";
+import * as yup from "yup";
+import EditorPagesPanel from './EditorPagesPanel';
+import EditorModulesPanel from './EditorModulesPanel';
+import EditorPagePropertiesPanel from './EditorPagePropertiesPanel';
+import EditorModulePropertiesPanel from './EditorModulePropertiesPanel';
+import EditorViewport from './EditorViewport';
+import EditorModuleLibraryModal from './EditorModuleLibraryMobal';
+import EditorHeader from './EditorHeader';
 
 interface EditorState {
   pages: PageData[];
-  selectedPage?: PageData | null;
-  selectedModule?: ModuleData | null;
+  selectedPageId?: PageData["id"] | null;
+  selectedModuleId?: ModuleData["id"] | null;
+
+  isModuleLibraryModalOpen: boolean;
   isCreatePageModalOpen: boolean;
+
+  viewMode: "editor" | "preview"
 }
 
 const initialState: EditorState = {
   pages: [],
-  selectedPage: null,
-  isCreatePageModalOpen: true,
-  selectedModule: null
+
+  selectedPageId: null,
+  selectedModuleId: null,
+
+  isModuleLibraryModalOpen: false,
+  isCreatePageModalOpen: false,
+
+  viewMode: "editor"
 }
 
 const OPEN_CREATE_MODAL = "OPEN_CREATE_MODAL";
@@ -44,10 +65,18 @@ const CLOSE_CREATE_MODAL = "CLOSE_CREATE_MODAL";
 
 const CREATE_PAGE = "CREATE_PAGE";
 const SELECT_PAGE = "SELECT_PAGE";
+const DELETE_PAGE = "DELETE_PAGE";
+const UPDATE_PAGE = "UPDATE_PAGE";
 
 const SELECT_MODULE = "SELECT_MODULE";
 const DELETE_MODULE = "DELETE_MODULE";
 const ADD_MODULE = "ADD_MODULE";
+const UPDATE_MODULE_PROPERTIES = "UPDATE_MODULE_PROPERTIES";
+
+const CHANGE_VIEW_MODE = "SET_VIEW_MODE";
+
+const OPEN_MODULE_LIBRARY_MODAL = "OPEN_MODULE_LIBRARY_MODAL";
+const CLOSE_MODULE_LIBRARY_MODAL = "CLOSE_MODULE_LIBRARY_MODAL";
 
 interface OpenCreatePageModalAction {
   type: typeof OPEN_CREATE_MODAL
@@ -67,6 +96,19 @@ interface SelectPageAction {
   payload: PageData["id"]
 }
 
+interface DeletePageAction {
+  type: typeof DELETE_PAGE,
+  payload: PageData["id"]
+}
+
+interface UpdatePageAction {
+  type: typeof UPDATE_PAGE,
+  payload: {
+    id: PageData["id"],
+    data: Partial<Omit<PageData, "id">>
+  }
+}
+
 interface SelectModuleAction {
   type: typeof SELECT_MODULE,
   payload?: ModuleData["id"] | null
@@ -79,6 +121,26 @@ interface DeleteModuleAction {
 interface AddModuleAction {
   type: typeof ADD_MODULE,
   payload: ModuleData
+}
+interface UpdateModulePropertiesAction {
+  type: typeof UPDATE_MODULE_PROPERTIES,
+  payload: {
+    moduleId: ModuleData["id"],
+    properties: ModuleDataProperties
+  }
+}
+
+interface OpenModuleLibraryModalAction {
+  type: typeof OPEN_MODULE_LIBRARY_MODAL,
+}
+
+interface CloseModuleLibraryModalAction {
+  type: typeof CLOSE_MODULE_LIBRARY_MODAL,
+}
+
+interface ChangeViewModeAction {
+  type: typeof CHANGE_VIEW_MODE,
+  payload: EditorState["viewMode"]
 }
 
 const getOpenCreatePageModalAction = (): OpenCreatePageModalAction => ({
@@ -99,6 +161,21 @@ const getSelectPageAction = (id: PageData["id"]): SelectPageAction => ({
   payload: id
 });
 
+const getDeletePageAction = (id: PageData["id"]): DeletePageAction => ({
+  type: DELETE_PAGE,
+  payload: id
+});
+
+const getUpdatePageAction = (id: UpdatePageAction["payload"]["id"], data: UpdatePageAction["payload"]["data"]): UpdatePageAction => ({
+  type: UPDATE_PAGE,
+  payload: {
+    id,
+    data
+  }
+});
+
+/* MODULE */
+
 const getSelectModuleAction = (id?: ModuleData["id"] | null): SelectModuleAction => ({
   type: SELECT_MODULE,
   payload: id
@@ -114,7 +191,41 @@ const getAddModuleAction = (moduleData: ModuleData): AddModuleAction => ({
   payload: moduleData
 });
 
-type EditorActions = OpenCreatePageModalAction | CloseCreatePageModalAction | CreatePageAction | SelectPageAction | SelectModuleAction | DeleteModuleAction | AddModuleAction;
+const getUpdateModulePropertiesAction = (moduleId: ModuleData["id"], properties: ModuleDataProperties): UpdateModulePropertiesAction => ({
+  type: UPDATE_MODULE_PROPERTIES,
+  payload: {
+    moduleId,
+    properties
+  }
+});
+
+const getOpenModuleLibraryModalAction = (): OpenModuleLibraryModalAction => ({
+  type: OPEN_MODULE_LIBRARY_MODAL,
+})
+
+const getCloseModuleLibraryModalAction = (): CloseModuleLibraryModalAction => ({
+  type: CLOSE_MODULE_LIBRARY_MODAL,
+})
+
+const getChangeViewMode = (mode: ChangeViewModeAction["payload"]): ChangeViewModeAction => ({
+  type: CHANGE_VIEW_MODE,
+  payload: mode
+})
+
+type EditorActions =
+  | OpenCreatePageModalAction
+  | CloseCreatePageModalAction
+  | CreatePageAction
+  | SelectPageAction
+  | DeletePageAction
+  | SelectModuleAction
+  | DeleteModuleAction
+  | AddModuleAction
+  | OpenModuleLibraryModalAction
+  | CloseModuleLibraryModalAction
+  | UpdatePageAction
+  | ChangeViewModeAction
+  | UpdateModulePropertiesAction
 
 const reducer: Reducer<EditorState, EditorActions> = (state, action) => {
   switch (action.type) {
@@ -130,32 +241,70 @@ const reducer: Reducer<EditorState, EditorActions> = (state, action) => {
         isCreatePageModalOpen: false
       }
     }
+
+    case OPEN_MODULE_LIBRARY_MODAL: {
+      return {
+        ...state,
+        isModuleLibraryModalOpen: true
+      }
+    }
+    case CLOSE_MODULE_LIBRARY_MODAL: {
+      return {
+        ...state,
+        isModuleLibraryModalOpen: false
+      }
+    }
+    /* PAGE */
     case CREATE_PAGE: {
       return {
         ...state,
-        pages: [...state.pages, action.payload]
+        pages: [...state.pages, action.payload],
+        selectedPageId: action.payload.id
       }
     }
     case SELECT_PAGE: {
-      return state.selectedPage && state.selectedPage.id === action.payload ? state : {
+      return state.selectedPageId !== action.payload ? {
         ...state,
-        selectedModule: null,
-        selectedPage: action.payload ? state.pages.find(page => page.id === action.payload) : null
+        selectedModuleId: null,
+        selectedPageId: action.payload
+      } : state
+    }
+    case DELETE_PAGE: {
+      return {
+        ...state,
+        pages: state.pages.filter(page => page.id !== action.payload),
+        selectedModuleId: null,
+        selectedPageId: null
       }
     }
+    case UPDATE_PAGE: {
+      return {
+        ...state,
+        pages: state.pages.map(page => {
+          if (page.id === action.payload.id) {
+            return {
+              ...page,
+              ...action.payload.data
+            }
+          }
+
+          return page
+        }),
+      }
+    }
+
+    /* MODULE */
     case SELECT_MODULE: {
       return {
         ...state,
-        selectedModule:
-          action.payload && state.selectedPage && state.selectedPage.modules
-            ? state.selectedPage.modules.find(moduleData => moduleData.id === action.payload)
-            : null
+        selectedModuleId: action.payload
       }
     }
+
     case DELETE_MODULE: {
       const pages = state.pages.map(page => {
-        if ((state.selectedPage && state.selectedPage.id === page.id) && page.modules) {
-          const childrenIdsToDelete = [action.payload, findChildrenModules(page.modules, action.payload, (module) => module.id)]
+        if ((state.selectedPageId && state.selectedPageId === page.id) && page.modules) {
+          const childrenIdsToDelete = [action.payload, ...findChildrenModules(page.modules, action.payload, (module) => module.id)]
 
           return {
             ...page,
@@ -166,18 +315,82 @@ const reducer: Reducer<EditorState, EditorActions> = (state, action) => {
         return page
       })
 
-      const selectedPage = state.selectedPage ? pages.find(page => page.id === state.selectedPage!.id) : null
+      return {
+        ...state,
+        selectedModuleId: null,
+        pages,
+      }
+    }
+
+    case ADD_MODULE: {
+      const pages = state.pages.map(page => {
+        if (state.selectedPageId && state.selectedPageId === page.id) {
+          return {
+            ...page,
+            modules: page.modules ? [...page.modules, action.payload] : [action.payload]
+          }
+        }
+
+        return page
+      })
 
       return {
         ...state,
-        selectedModule: null,
+        selectedModuleId: action.payload.id,
         pages,
-        selectedPage
+        isModuleLibraryModalOpen: false
       }
     }
-    case ADD_MODULE: {
-      return state
+
+    case UPDATE_MODULE_PROPERTIES: {
+      if (state.selectedPageId) {
+        return {
+          ...state,
+          pages: state.pages.map(page => {
+            if ((page.id === state.selectedPageId) && page.modules) {
+              return {
+                ...page,
+                modules: page.modules.map(moduleData => {
+                  if (moduleData.id === action.payload.moduleId) {
+                    return {
+                      ...moduleData,
+                      module: {
+                        ...moduleData.module,
+                        properties: {
+                          ...moduleData.module.properties,
+                          ...action.payload.properties
+                        }
+                      }
+                    }
+                  }
+
+                  return moduleData;
+                })
+              }
+            }
+
+            return page;
+          })
+        }
+      }
+
+      return state;
     }
+
+    case CHANGE_VIEW_MODE: {
+      return {
+        ...state,
+        viewMode: action.payload
+      }
+    }
+
+    // case UPDATE_MODULE_PROPERTIES: {
+    //   return {
+    //     ...state,
+    //     viewMode: action.payload
+    //   }
+    // }
+
     default: {
       return state
     }
@@ -188,314 +401,138 @@ interface EditorProps {
   initialData: PageData[];
 }
 
+
+interface EditorContextValue {
+  selectPage: (id: PageData["id"]) => void,
+  deletePage: (id: PageData["id"]) => void,
+  updatePage: (id: PageData["id"], data: Partial<Omit<PageData, "id">>) => void,
+  addPage: (data: PageData) => void,
+
+  // module
+  selectModule: (id: ModuleData["id"] | null) => void,
+  deleteModule: (id: ModuleData["id"]) => void,
+  addModule: (data: ModuleData) => void,
+  updateModuleProperties: (id: ModuleData['id'], properties: ModuleDataProperties) => void;
+
+  // create page modal
+  openCreatePageModal: () => void,
+  closeCreatePageModal: () => void,
+
+  // module library modal
+  closeModuleLibraryModal: () => void,
+  openModuleLibraryModal: () => void,
+
+  changeViewMode: (mode: ChangeViewModeAction["payload"]) => void
+
+}
+
+interface EditorStateContextValue extends EditorState {
+  selectedPage?: PageData,
+  selectedModule?: ModuleData
+}
+
+const EditorContext = createSafeContext<EditorContextValue>();
+const EditorStateContext = createSafeContext<EditorStateContextValue>();
+
+export const useEditor = () => useSafeContext(EditorContext);
+export const useEditorState = () => useSafeContext(EditorStateContext);
+
 const Editor = ({ initialData }: EditorProps) => {
   const editorInitialState = useMemo(() => {
     return {
       ...initialState,
       pages: initialData,
-      selectedPage: initialData[0]
+      selectedPageId: initialData[0] ? initialData[0].id : undefined
     }
   }, []);
   const [state, dispatch] = useReducer(reducer, editorInitialState);
 
-  const [selected, setSelected] = useState<ModuleData>();
-  const [isEditorMode, setIsEditorMode] = useState(true);
-  const [scale, setScale] = useState(1);
+  const selectedPage = useMemo(() => {
+    if (state.selectedPageId) {
+      return state.pages.find(page => page.id === state.selectedPageId);
+    }
 
-  // const handleAction = useCallback(({ type, payload }: {
-  //   type: "add" | "select" | "delete",
-  //   payload: {
-  //     id: ModuleData["id"]
-  //   }
-  // }) => {
+    return undefined;
+  }, [state]);
 
-  //   switch (type) {
-  //     case "delete": {
-  //       const { id } = payload;
-  //       api.module.deleteOne(id).then(({ data }) => {
-  //         if (data.data && data.data.deletedCount > 0) {
-  //           setModulesData(modulesData.filter(moduleData => moduleData.id !== id));
-  //         }
-  //       }).catch((err) => {
-  //         console.log(err);
-  //       })
+  const selectedModule = useMemo(() => {
+    if (selectedPage && state.selectedModuleId && selectedPage.modules) {
+      return selectedPage.modules.find(module => module.id === state.selectedModuleId);
+    }
 
-  //       break;
-  //     }
+    return undefined;
+  }, [state.selectedModuleId, selectedPage]);
 
-  //     case "select": {
-  //       setSelected(modulesData.find(moduleData => moduleData.id === payload.id));
+  const editor = useMemo(() => {
+    return {
+      // page
+      selectPage: (id: PageData["id"]) => dispatch(getSelectPageAction(id)),
+      deletePage: (id: PageData["id"]) => dispatch(getDeletePageAction(id)),
+      updatePage: (id: PageData["id"], data: Partial<Omit<PageData, "id">>) => dispatch(getUpdatePageAction(id, data)),
+      addPage: (data: PageData) => dispatch(getCreatePageAction(data)),
 
-  //       break;
-  //     }
-
-  //     case "add": {
-  //       setIsModuleLibraryModalOpen(true);
-
-  //       moduleIdToAddRef.current = payload.id;
-
-  //       break;
-  //     }
-  //   }
-  // }, [modulesData]);
-
-  // const handleModuleLibraryModalClose = () => {
-  //   setIsModuleLibraryModalOpen(false)
-  // }
-
-  // const handleModuleLibraryModalSelect = (module: Module) => {
-  //   setIsModuleLibraryModalOpen(false);
-
-  //   const moduleIdToAdd = moduleIdToAddRef.current;
-
-  //   if (moduleIdToAdd !== undefined) {
-  //     const newModuleDataItem = {
-  //       parentId: moduleIdToAdd,
-  //       module: {
-  //         id: module.id
-  //       }
-  //     }
-
-  //     api.module.create(newModuleDataItem)
-  //       .then(({ data }) => {
-  //         const addedModuleData = data.data;
-
-  //         if (addedModuleData !== undefined) {
-  //           setModulesData(oldState => {
-  //             return [
-  //               ...oldState,
-  //               addedModuleData
-  //             ]
-  //           });
-
-  //           setSelected(addedModuleData);
-  //         }
-  //       }).catch(err => {
-  //         console.log(err);
-  //       });
-
-  //     moduleIdToAddRef.current = undefined;
-  //   }
-  // }
-
-  // const handleModulePropertiesChange = (moduleData: ModuleData) => {
-  //   setModulesData(modulesData.map((modulesDataItem) => {
-  //     if (modulesDataItem.id === moduleData.id) {
-  //       return moduleData;
-  //     }
-
-  //     return modulesDataItem
-  //   }));
-
-  //   setSelected(moduleData);
-  // }
-
-  // // useEffect(() => {
-  // //   if (selected && prevSelected && selected.id !== prevSelected.id) {
-  // //     api.module.update(prevSelected.id, prevSelected).then((data) => {
-  // //       return;
-  // //     }).catch((err) => {
-  // //       return;
-  // //     });
-  // //   }
-  // // }, [selected]);
+      // module
+      selectModule: (id: ModuleData["id"] | null) => dispatch(getSelectModuleAction(id)),
+      deleteModule: (id: ModuleData["id"]) => dispatch(getDeleteModuleAction(id)),
+      addModule: (data: ModuleData) => dispatch(getAddModuleAction(data)),
+      updateModuleProperties: (id, properties) => dispatch(getUpdateModulePropertiesAction(id, properties)),
 
 
-  // const propertiesHaveChanged = selected && prevSelected && selected.id === prevSelected.id && selected !== prevSelected;
+      // create page modal
+      openCreatePageModal: () => dispatch(getOpenCreatePageModalAction()),
+      closeCreatePageModal: () => dispatch(getCloseCreatePageModalAction()),
 
-  // console.log(propertiesHaveChanged);
+      // module library modal
+      closeModuleLibraryModal: () => dispatch(getCloseModuleLibraryModalAction()),
+      openModuleLibraryModal: () => dispatch(getOpenModuleLibraryModalAction()),
 
-  // const handleSaveChanges = useCallback(() => {
-  //   if (propertiesHaveChanged && selected) {
-  //     api.module.update(selected.id, selected).then((data) => {
-  //       return;
-  //     }).catch((err) => {
-  //       return;
-  //     });
-  //   }
-  // }, [propertiesHaveChanged, selected]);
+      changeViewMode: (mode: ChangeViewModeAction["payload"]) => dispatch(getChangeViewMode(mode))
+    } as EditorContextValue;
 
-  // console.log({pagesData.map(pageData => ({
-  //   id: pageData.id,
-  //   label: pageData.title
-  // })), pagesData)
 
-  console.log(state.pages, state.pages.map(pageData => ({
-    id: pageData.id,
-    label: pageData.title
-  })))
+    // const newPageData: PageData = { id: Date.now().toString(), url, title }
 
-  const pagesMenuItems = state.pages.map(pageData => ({
-    id: pageData.id,
-    label: pageData.title
-  }))
 
-  const handlePagesMenuSelect = (id: string) => {
-    dispatch(getSelectPageAction(id));
-  }
+    const handleAddModule = (id: ModuleData["id"]) => {
+      // dispatch(getAddModuleAction(moduleData));
+    }
 
-  const openCreatePageModal = () => {
-    dispatch(getOpenCreatePageModalAction());
-  }
+  }, [dispatch]);
 
-  const closeCreatePageModal = () => {
-    dispatch(getCloseCreatePageModalAction());
-  }
 
-  const handleAddPage = ({ url, title }: { url: string, title: string }) => {
-    const newPageData: PageData = { id: Date.now().toString(), url, title }
+  const editorState = useMemo(() => {
+    return {
+      ...state,
+      selectedPage,
+      selectedModule
+    }
+  }, [state, selectedPage]);
 
-    dispatch(getCreatePageAction(newPageData));
-  }
+  console.log(state.selectedModuleId);
 
-  const handleSelectModule = (id: ModuleData["id"]) => {
-    dispatch(getSelectModuleAction(id));
-  }
+  return <EditorStateContext.Provider value={editorState}>
+    <EditorContext.Provider value={editor}>
+      <div className={classNames("editor", `editor--view-mode-${state.viewMode}`)}>
+        <EditorHeader />
+        <div className="editor__body">
+          <Sidebar className="editor__sidebar editor__sidebar--left">
+            <EditorPagesPanel />
+            <EditorModulesPanel />
+          </Sidebar>
 
-  const handleDeleteModule = (id: ModuleData["id"]) => {
-    dispatch(getDeleteModuleAction(id));
-  }
+          <EditorViewport />
 
-  const handleAddModule = (id: ModuleData["id"]) => {
-    // dispatch(getAddModuleAction(moduleData));
-  }
+          <Sidebar className="editor__sidebar editor__sidebar--left">
+            <EditorPagePropertiesPanel />
+            <EditorModulePropertiesPanel />
+          </Sidebar>
 
-  // const handleAddPage = () => {
-  // }
-
-  return <div className="view">
-    <div className="view__header">
-      <div className="view__header-left"></div>
-
-      <div className="view__header-center">
-        <div className="label-switch">
-          <span onClick={() => setIsEditorMode(true)} className={classNames("label-switch__label", { "is-active": isEditorMode })}>
-            Editor
-          </span>
-          <span className="label-switch__label-separator">
-            /
-          </span>
-          <span onClick={() => setIsEditorMode(false)} className={classNames("label-switch__label", { "is-active": !isEditorMode })}>
-            View
-          </span>
+          <EditorCreatePageModal />
+          <EditorModuleLibraryModal />
         </div>
       </div>
-
-      <div className="view__header-right"></div>
-    </div>
-    <div className="view__body">
-      <div className="editor">
-        <Sidebar className="editor__sidebar editor__sidebar--left">
-          <Panel>
-            <PanelHeader>
-              <span className="title">Pages</span>
-              <span className="separator separator--row" />
-              <button onClick={openCreatePageModal} className="button button--circle">
-                <Icon name="plus" />
-              </button>
-            </PanelHeader>
-            <PanelBody>
-              <Menu
-                selected={state.selectedPage?.id}
-                onSelect={handlePagesMenuSelect}
-                items={pagesMenuItems}
-              />
-            </PanelBody>
-          </Panel>
-
-          <Panel>
-            <PanelHeader>
-              <span className="title">Modules</span>
-              <span className="separator separator--row" />
-              <button className="button button--circle">
-                <Icon name="plus" />
-              </button>
-            </PanelHeader>
-            <PanelBody>
-              <ModuleHierarchy
-                onSelect={handleSelectModule}
-                onAdd={handleAddModule}
-                onDelete={handleDeleteModule}
-                selected={state.selectedModule}
-                className="editor__hierarchy"
-                items={state.selectedPage?.modules || []}
-              // selected={selected}
-              />
-            </PanelBody>
-            {/* <div className="editor__hierarchy-controls">
-                <button onClick={() => {
-                  handleAction({ type: "add", payload: { id: 0 } })
-                }} className="editor__hierarchy-controls-add-button button button--block button--solid">Add</button>
-              </div> */}
-          </Panel>
-        </Sidebar>
-
-        <div className="editor__viewport">
-          <div className="editor__viewport-modules">
-            <div style={{ transform: `scale(${scale})` }} className="editor__viewport-modules-scaler">
-              {/* <ModuleViewport
-                  onSelect={(moduleData) => setSelected(moduleData)}
-                  selected={selected && selected.id}
-                  showModulesBoundaries={true}
-                  items={modulesData}
-                /> */}
-            </div>
-          </div>
-          <div className="editor__viewport-footer">
-            <ScaleRange value={scale} onChange={(scale) => setScale(scale)} />
-          </div>
-        </div>
-
-        <Panel className="editor__panel editor__panel--right">
-          <Panel>
-            <PanelHeader>
-              <span className="title u-nowrap">Page properties</span>
-              <span className="separator separator--row" />
-            </PanelHeader>
-            <PanelBody>
-
-            </PanelBody>
-            {/* {selected ? <>
-                <PanelBody>
-                  <ModuleProperties
-                    moduleData={selected}
-                    onChange={handleModulePropertiesChange}
-                  />
-                </PanelBody>
-                {propertiesHaveChanged && <PanelFooter>
-                  <div className="editor__properties-controls">
-                    <button onClick={handleSaveChanges} className={classNames("editor__hierarchy-controls-add-button button button--block button--solid")}>Save changes</button>
-                  </div>
-                </PanelFooter>
-                }
-              </> : null} */}
-          </Panel>
-          <Panel>
-            <PanelHeader>
-              <span className="title u-nowrap">Module properties</span>
-              <span className="separator separator--row" />
-            </PanelHeader>
-            <PanelBody>
-
-            </PanelBody>
-          </Panel>
-        </Panel>
-
-        <EditorCreatePageModal
-          templates={[{ id: "1", name: "my template", modules: [] }, { id: "2", name: "my template 2", modules: [] }]}
-          onClose={closeCreatePageModal}
-          onAdd={handleAddPage}
-          open={state.isCreatePageModalOpen} />
-
-        {/* <ModuleLibraryModal
-            onSelect={handleModuleLibraryModalSelect}
-            onClose={handleModuleLibraryModalClose}
-            open={isModuleLibraryModalOpen}
-          /> */}
-      </div>
-    </div>
-  </div>
-
+    </EditorContext.Provider>
+  </EditorStateContext.Provider>
 }
 
 export default Editor;

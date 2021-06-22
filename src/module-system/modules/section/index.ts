@@ -2,6 +2,7 @@ import background from "@module-system/properties/background";
 import height from "@module-system/properties/height";
 import verticalAlignment from "@module-system/properties/vertical-alignment"
 import Section from "./Section";
+import properties from "./properties";
 
 // export interface SectionProperties extends ModuleProperties {
 //   background: typeof background
@@ -14,18 +15,7 @@ const layout: Module = {
   description: "Section module",
   category: "layout",
   hasChildren: true,
-  properties: [
-    {
-      id: "background",
-      name: "Background",
-      property: background
-    },
-    {
-      id: "height",
-      name: "Height",
-      property: height
-    }
-  ],
+  properties: properties,
   component: Section,
 }
 

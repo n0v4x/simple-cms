@@ -9,9 +9,9 @@ interface ModuleData extends TreeDataItem {
   }
 }
 
-interface ModuleProps<P extends any = any> {
+interface ModuleProps<P = any> {
   id?: string;
-  properties?: P,
+  properties: P,
   children?: ReactNode,
   className?: string,
 }
@@ -23,19 +23,24 @@ interface ModulePropertiesItem {
   property: ModuleProperty
 }
 
+interface Property<PF extends any = any> {
+  name: string;
+  defaultValue: PF
+  component: (props: PropertyProps) => JSX.Element
+}
+
+interface ModuleProperties {
+  [key: string]: Property
+}
+
 interface Module {
   id: string;
   name: string;
   category?: string;
   hasChildren: boolean;
   description: string;
-  properties?: ModulePropertiesItem[],
+  properties?: ModuleProperties,
   component: (props: ModuleProps) => JSX.Element
-}
-
-interface ModulePropertyProps<T> {
-  onChange: (data: T) => void
-  data: T,
 }
 
 interface ModuleProperty<T extends any = any> {
@@ -43,4 +48,11 @@ interface ModuleProperty<T extends any = any> {
   description?: string,
   component: (props: ModulePropertyProps<T>) => JSX.Element,
   defaultData: T
+}
+
+
+type ModulePropsProperties<T extends ModuleProperties> = { [K in keyof T]: T[K]["defaultValue"] }
+
+interface PropertyProps {
+  name: string
 }

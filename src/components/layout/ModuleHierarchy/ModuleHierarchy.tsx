@@ -7,7 +7,7 @@ export interface ModuleHierarchyGeneralProps {
 
 interface ModuleHierarchyProps extends ModuleHierarchyGeneralProps {
   items: ModuleData[],
-  selected?: ModuleData | null,
+  selected?: ModuleData["id"] | null,
   className?: string;
   onSelect: (id: ModuleData["id"]) => void;
   onDelete: (id: ModuleData["id"]) => void;

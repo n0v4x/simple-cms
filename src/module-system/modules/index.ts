@@ -20,7 +20,7 @@ export const registerModule = (module: Module) => {
   modules[module.id] = module;
 }
 
-export const getModule = (id: Module["id"]) => {
+export const getModule = (id: Module["id"]): Module | undefined => {
   return modules[id];
 }
 

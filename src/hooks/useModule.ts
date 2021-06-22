@@ -4,10 +4,10 @@ import { useMemo } from "react"
 const useModule = (moduleId: Module["id"] | undefined) => {
   const module = useMemo(() => {
     if (moduleId === undefined) {
-      return null;
+      return undefined;
     }
 
-    const result: Module = getModule(moduleId);
+    const result = getModule(moduleId);
 
     return result;
   }, [moduleId]);

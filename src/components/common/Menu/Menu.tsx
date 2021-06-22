@@ -1,29 +1,32 @@
-import classNames from 'classnames'
 import React from 'react'
+import classNames from 'classnames'
+import MenuItem from "./MenuItem";
 
-interface MenuItem {
+export interface MenuItemData {
   id: string;
   label: string;
 }
 
-interface MenuProps {
-  items: MenuItem[],
-  selected?: MenuItem["id"],
-  onSelect?: (item: MenuItem["id"]) => void
+export interface MenuProps {
+  className?: string;
+  items: MenuItemData[];
+  popupMenuItems?: MenuItemData[];
+  selected?: MenuItemData["id"] | null;
+  popup?: boolean;
+  onSelect: (item: MenuItemData["id"], popupItemId?: MenuItemData["id"]) => void;
 }
 
-const Menu = ({ items, selected, onSelect }: MenuProps) => {
+const Menu = ({ items, selected, popupMenuItems, popup, className, onSelect }: MenuProps) => {
   return (
-    <div className="menu">
+    <div className={classNames("menu", { "menu--type-popup": popup }, className)}>
       <ul className="menu__list list">
-        {items.map(item => {
-          return <li
-            onClick={onSelect && (() => onSelect(item.id))}
+        {items.map((item) => {
+          return <MenuItem
+            isSelected={selected === item.id}
             key={item.id}
-            className={classNames("menu__item", { "is-selected": selected && selected === item.id })}
-          >
-            {item.label}
-          </li>
+            item={item}
+            popupMenuItems={popupMenuItems}
+            onSelect={onSelect} />
         })}
       </ul>
     </div>

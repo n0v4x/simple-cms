@@ -6,6 +6,7 @@
   background-color: transparent;
   font-family: inherit;
   cursor: pointer;
+  transition: all 0.2s;
 
   &--solid {
     background-color: $primary-color-light;
@@ -18,7 +19,7 @@
     }
   }
 
-  &--circle {
+  &--shape-circle {
     flex: 0 0 auto;
 
     width: 30px;
@@ -29,6 +30,35 @@
     &:hover {
       background-color: rgba(0, 0, 0, 0.05);
     }
+  }
+
+  &--shape-circle#{&}--size-md {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2em;
+  }
+
+  &--shape-circle#{&}--size-lg {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4em;
+  }
+
+  &--shape-circle#{&}--type-solid {
+    background-color: $primary-color-lighter;
+
+    &:hover,
+    &:focus {
+      background-color: $primary-color;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &--type-solid.is-disabled {
+    background-color: rgba(0, 0, 0, 0.05) !important;
   }
 
   &.is-disabled {

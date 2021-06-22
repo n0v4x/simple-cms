@@ -14,17 +14,6 @@
     margin-bottom: 3px;
   }
 
-  // &.has-children
-  //   > &__inner
-  //   > &__body
-  //   > .module-hierarchy__list
-  //   > &
-  //   > &__inner
-  //   > &__header
-  //   > &__header-inner {
-  //   border-left: 1px solid #000;
-  // }
-
   &__header {
     // margin-bottom: 5px;
     padding-right: 10px;
@@ -35,15 +24,6 @@
     &:hover {
       background-color: hsl(161, 100%, 90%);
     }
-
-    // &::before {
-    //   content: "";
-    //   left: 0;
-    //   position: absolute;
-    //   width: 10px;
-    //   height: 1px;
-    //   background-color: black;
-    // }
   }
 
   &__header:hover &__control-list {

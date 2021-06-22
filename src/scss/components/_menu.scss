@@ -1,11 +1,9 @@
 .menu {
-  // &__list {
-  //   padding: $edges-padding-sm 0;
-  // }
   &__item {
-    height: 40px;
+    position: relative;
+    height: 50px;
     padding: 0 $edges-padding-md;
-    transition: all 0.4s;
+    transition: background-color 0.4s;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -17,5 +15,67 @@
     &.is-selected {
       background-color: $primary-color;
     }
+  }
+
+  &__item-popup {
+    margin-left: auto;
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &__item.is-selected &__item-popup,
+  &__item:hover &__item-popup {
+    opacity: 1;
+  }
+
+  &--type-popup &__item {
+    height: 35px;
+  }
+
+  $popup-menu-appear-duration: 0.2s;
+  $popup-menu-delay-before-disappear: 0.4s;
+
+  &__item:hover &__item-popup-btn:active ~ &__item-popup-menu,
+  &__item.is-selected &__item-popup-btn:active ~ &__item-popup-menu,
+  // &__item.is-selected &__item-popup-menu:hover,
+  &__item-popup-menu:hover {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+
+    transition: opacity $popup-menu-appear-duration,
+      transform $popup-menu-appear-duration, visibility 0s;
+  }
+
+  &__item-popup-menu,
+  &__item-popup-menu:active {
+    min-width: 180px;
+    padding: $edges-padding-sm 0;
+
+    opacity: 0;
+    transform: scale(0.9);
+    visibility: hidden;
+
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.05),
+      0 8px 16px rgba(0, 0, 0, 0.05);
+
+    cursor: default;
+    z-index: 1;
+
+    transition: opacity $popup-menu-appear-duration
+        $popup-menu-delay-before-disappear,
+      transform $popup-menu-appear-duration $popup-menu-delay-before-disappear,
+      visibility $popup-menu-appear-duration $popup-menu-delay-before-disappear;
+  }
+
+  &--type-popup {
+    $offset-from-edges: 5px;
+
+    position: absolute;
+
+    right: -$offset-from-edges;
+    top: -$offset-from-edges;
   }
 }

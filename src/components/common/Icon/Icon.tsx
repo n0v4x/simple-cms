@@ -1,12 +1,14 @@
 import React from 'react';
-import { Plus } from "react-feather";
+import { MoreVertical, Plus, Save } from "react-feather";
 
 const icons = {
-  "plus": Plus
+  "plus": Plus,
+  "more-vertical": MoreVertical,
+  "save": Save
 }
 
 interface IconProps {
-  name: keyof typeof icons
+  name: keyof typeof icons,
 }
 
 const Icon = ({ name }: IconProps) => {

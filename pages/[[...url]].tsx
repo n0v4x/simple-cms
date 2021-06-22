@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import Head from "next/head"
 import PageModules from '@components/layout/PageModules'
+import pageService from "@api/services/page";
 
+import { pages } from "@data/index"
 
 interface PageProps {
   data: PageData
@@ -23,22 +24,29 @@ const Page = ({ data }: PageProps) => {
 export default Page;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  let data: PageData = {
-    id: "home",
-    url: "/",
-    modules: [],
-    title: "Home"
-  };
+  let data: PageData | null = null;
 
-  if (ctx.resolvedUrl === data.url) {
-    return {
-      props: {
-        data
-      }
-    }
+  // try {
+  //   const foundPages = await pageService.get({ url: ctx.resolvedUrl });
+
+  //   if (foundPages.success === 1 && foundPages.data.length > 0) {
+  //     data = foundPages.data[0];
+  //   }
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
+  const foundPage = pages.find(page => page.url === ctx.resolvedUrl);
+
+  if (foundPage) {
+    data = foundPage;
   }
 
-  return {
+  return data ? {
+    props: {
+      data
+    }
+  } : {
     notFound: true
   }
 }

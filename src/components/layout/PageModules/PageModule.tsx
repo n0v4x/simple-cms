@@ -1,5 +1,6 @@
 import { MouseEventHandler, ReactNode } from "react";
 import useModule from "@hooks/useModule";
+import { useModuleProperties } from "@hooks/useModuleProperties";
 
 interface PageModule {
   data: ModuleData;
@@ -13,9 +14,10 @@ const PageModule = ({ data, children }: PageModule) => {
     return null;
   }
 
+  const properties = useModuleProperties(data);
   const Component = module.component;
 
-  return <Component properties={data.module.properties}>
+  return <Component properties={properties}>
     {children}
   </Component>
 }

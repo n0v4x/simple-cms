@@ -1,14 +1,21 @@
 import classNames from "classnames"
-import { ReactNode } from "react"
+import { CSSProperties, ReactNode, useEffect, useMemo } from "react"
+import properties from "./properties";
 
 
-interface ModuleLayoutProps extends ModuleProps<{
-
-}> {
+interface ModuleLayoutProps extends ModuleProps<ModulePropsProperties<typeof properties>> {
 }
 
 const ModuleLayout = ({ children, properties, className, id }: ModuleLayoutProps) => {
-  return <div id={id} className={classNames("layout", className)}>
+  const style = useMemo(() => {
+    const style: CSSProperties = {
+      backgroundColor: properties.backgroundColor.color
+    };
+
+    return style;
+  }, [properties]);
+
+  return <div style={style} id={id} className={classNames("layout", className)}>
     {children}
   </div>
 }

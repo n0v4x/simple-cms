@@ -6,7 +6,7 @@ interface ModuleViewportListProps extends ModuleViewportGeneralProps {
   items: ModuleData[];
   parentId: ModuleData["parentId"];
   level: number;
-  selected?: ModuleData["id"]
+  selected?: ModuleData["id"] | null
 }
 
 const ModuleViewportList = ({ items, parentId, level, showModulesBoundaries, selected, ...generalProps }: ModuleViewportListProps) => {

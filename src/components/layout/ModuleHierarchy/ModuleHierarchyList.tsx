@@ -6,7 +6,7 @@ interface ModuleHierarchyListProps extends ModuleHierarchyGeneralProps {
   items: ModuleData[],
   parentId?: ModuleData["parentId"],
   level?: number,
-  selected?: ModuleData | null,
+  selected?: ModuleData["id"] | null,
   onSelect: (id: ModuleData["id"]) => void;
   onDelete: (id: ModuleData["id"]) => void;
   onAdd: (id: ModuleData["id"]) => void;
@@ -26,7 +26,7 @@ const ModuleHierarchyList = ({ items, parentId = 0, level = 0, selected, onAdd, 
           level={level}
           item={currentLevelItem}
           key={currentLevelItem.id}
-          isSelected={!!selected && selected.id === currentLevelItem.id}
+          isSelected={selected === currentLevelItem.id}
           hasChildren={items.findIndex(child => child.parentId === currentLevelItem.id) !== -1}
           onAdd={() => onAdd(currentLevelItem.id)}
           onDelete={() => onDelete(currentLevelItem.id)}

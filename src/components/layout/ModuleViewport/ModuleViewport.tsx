@@ -3,12 +3,12 @@ import ModuleViewportList from "./ModuleViewportList";
 
 export interface ModuleViewportGeneralProps {
   showModulesBoundaries?: boolean;
-  onSelect?: (moduleData: ModuleData) => void
+  onSelect?: (moduleId: ModuleData["id"]) => void
 }
 
 interface ModuleViewportProps extends ModuleViewportGeneralProps {
   items: ModuleData[];
-  selected?: ModuleData["id"];
+  selected?: ModuleData["id"] | null;
 }
 
 const ModuleViewport = ({ items, ...generalProps }: ModuleViewportProps) => {
