@@ -1,27 +1,27 @@
 import layout from "./layout";
 import section from "./section";
 import container from "./container";
+import header from "./header";
+import navLink from "./navLink";
+import navbar from "./navbar";
 import text from "./text";
 
-export const modules: {
-  [key: string]: Module
-} = {
-  [layout.id]: layout,
-  [section.id]: section,
-  [container.id]: container,
-  [text.id]: text
-}
+export const moduleLibrary: { [key: string]: Module } = {}
 
-export const registerModule = (module: Module) => {
-  if (module.id in modules) {
-    throw Error(`Module with id "${module.id}" already exists`);
-  }
+export const registerModules = (modules: Module[]) => {
+  modules.forEach(module => {
+    if (module.id in modules) {
+      throw Error(`Module with id "${module.id}" already exists`);
+    }
 
-  modules[module.id] = module;
+    moduleLibrary[module.id] = module;
+  })
 }
 
 export const getModule = (id: Module["id"]): Module | undefined => {
-  return modules[id];
+  return moduleLibrary[id];
 }
 
-export default modules;
+registerModules([layout, section, container, header, navLink, navbar, text]);
+
+export default moduleLibrary;

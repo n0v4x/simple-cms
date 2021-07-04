@@ -1,7 +1,4 @@
-import verticalAlignment from "@module-system/properties/vertical-alignment";
-import width from "@module-system/properties/width";
 import Container from "./Container";
-
 import properties from "./properties";
 
 const container: Module = {
@@ -13,5 +10,6 @@ const container: Module = {
   properties,
   component: Container,
 }
+
 
 export default container;

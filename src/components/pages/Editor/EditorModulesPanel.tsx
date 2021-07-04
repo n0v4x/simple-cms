@@ -39,11 +39,6 @@ const EditorModulesPanel = (props: Props) => {
         items={moduleHierarchyItems}
       />
     </PanelBody>
-    {/* <div className="editor__hierarchy-controls">
-  <button onClick={() => {
-    handleAction({ type: "add", payload: { id: 0 } })
-  }} className="editor__hierarchy-controls-add-button button button--block button--solid">Add</button>
-</div> */}
   </Panel>
 }
 

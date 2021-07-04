@@ -1,34 +1,16 @@
-import { Reducer, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { Reducer, useMemo, useReducer } from 'react'
 
-import ModuleViewport from '@components/layout/ModuleViewport'
-import ModuleHierarchy from '@components/layout/ModuleHierarchy'
-import ModuleLibraryModal from "@components/layout/ModuleLibraryModal";
-import ModuleProperties from "@components/layout/ModuleProperties";
-import Panel, { PanelHeader } from '@components/common/Panel'
-import ScaleRange from '@components/common/ScaleRange';
-import axios from "axios";
-import usePrevState from '@hooks/usePrevState';
 import classNames from 'classnames';
-import PanelBody from '@components/common/Panel/PanelBody';
-import PanelFooter from '@components/common/Panel/PanelFooter';
-import pagesData from "@data/pages.json";
-import modulesData from "@data/modules.json";
+
 import Sidebar from '@components/common/Sidebar';
-import Menu from '@components/common/Menu';
-import { Plus } from 'react-feather';
-import Icon from '@components/common/Icon';
 import EditorCreatePageModal from './EditorCreatePageModal';
 import { findChildrenModules } from '@utils/module';
-import Input from '@components/common/Input';
-import PageProperties, { Properties, PagePropertiesProps } from './PageProperties';
 
 import {
   useSafeContext,
-  createSafeConsumer,
   createSafeContext,
 } from "@contexts/helpers";
-import * as yup from "yup";
+
 import EditorPagesPanel from './EditorPagesPanel';
 import EditorModulesPanel from './EditorModulesPanel';
 import EditorPagePropertiesPanel from './EditorPagePropertiesPanel';
@@ -384,13 +366,6 @@ const reducer: Reducer<EditorState, EditorActions> = (state, action) => {
       }
     }
 
-    // case UPDATE_MODULE_PROPERTIES: {
-    //   return {
-    //     ...state,
-    //     viewMode: action.payload
-    //   }
-    // }
-
     default: {
       return state
     }
@@ -488,15 +463,6 @@ const Editor = ({ initialData }: EditorProps) => {
 
       changeViewMode: (mode: ChangeViewModeAction["payload"]) => dispatch(getChangeViewMode(mode))
     } as EditorContextValue;
-
-
-    // const newPageData: PageData = { id: Date.now().toString(), url, title }
-
-
-    const handleAddModule = (id: ModuleData["id"]) => {
-      // dispatch(getAddModuleAction(moduleData));
-    }
-
   }, [dispatch]);
 
 

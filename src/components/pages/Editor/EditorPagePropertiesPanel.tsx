@@ -1,13 +1,10 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
-import Panel, { PanelBody, PanelFooter, PanelHeader } from "@components/common/Panel"
+import Panel, { PanelBody, PanelHeader } from "@components/common/Panel"
 import { useEditor, useEditorState } from './Editor'
-import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
 import Form, { FromControl } from '@components/common/Form';
 import Input, { InputConfigType } from '@components/common/Input/Input';
-import Icon from '@components/common/Icon';
-import classNames from 'classnames';
 
 interface EditorPagePropertiesPanelProps {
 
@@ -72,10 +69,7 @@ const EditorPagePropertiesPanel = (props: EditorPagePropertiesPanelProps) => {
     watch,
     reset,
     formState: { errors, isValid, isSubmitted, isDirty },
-  } = useForm<PagePropertiesFields>({
-    // resolver: yupResolver(yupSchema),
-    // shouldUseNativeValidation: true
-  });
+  } = useForm<PagePropertiesFields>();
   const watchedFields = watch();
 
   const defaultValues = useMemo(() => {
@@ -109,7 +103,6 @@ const EditorPagePropertiesPanel = (props: EditorPagePropertiesPanelProps) => {
 
   useEffect(() => {
     if (isDirty && isValid) {
-      console.log(editorState.selectedPageId);
       submit();
       reset(watchedFields);
     }
@@ -158,17 +151,6 @@ const EditorPagePropertiesPanel = (props: EditorPagePropertiesPanelProps) => {
               required: "Required field"
             })} />
           </FromControl>
-          {/* {Object.entries(properties).map(([name, config]) => {
-            return (
-              <FromControl
-                key={name}
-                label={config.label}
-                error={errors[name as keyof PagePropertiesFields]?.message}
-              >
-                <Input {...config.input} {...register(name as keyof PagePropertiesFields, {})} />
-              </FromControl>
-            );
-          })} */}
         </Form>
       </PanelBody>
     </Panel>

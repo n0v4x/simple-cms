@@ -1,6 +1,6 @@
 import * as api from "@api/index";
 
-const cerateService = (resource: string) => {
+const initService = (resource: string) => {
   const get = (filter?: Pick<PageData, "url">) => {
     return api.get<{
       data: PageData[],
@@ -8,11 +8,11 @@ const cerateService = (resource: string) => {
     } | {
       error: string,
       success: 0
-    }>(resource, undefined, filter);
+    }>(resource, filter);
   }
 
   const getOne = (id: PageData["id"]) => {
-    return api.get<{ data?: PageData, error?: { message: string } }>(resource, id);
+    return api.get<{ data?: PageData, error?: { message: string } }>([resource, id]);
   }
 
   const create = (data: Omit<PageData, "id">) => {
@@ -22,7 +22,7 @@ const cerateService = (resource: string) => {
     } | {
       error: string,
       success: 0
-    }>(resource, data);
+    }, typeof data>(resource, data);
   }
 
   const deleteOne = (id: PageData["id"]) => {
@@ -32,17 +32,17 @@ const cerateService = (resource: string) => {
     } | {
       error: string,
       success: 0
-    }>(resource, id)
+    }>([resource, id])
   }
 
-  const addModule = (pageId: PageData["id"], moduleData: ModuleData) => {
-    return api.post<{
-      data: ModuleData,
+  const update = (id: PageData["id"], pageData: PageData) => {
+    return api.put<{
       success: 1
+      data: PageData,
     } | {
-      error: string,
       success: 0
-    }>(resource + `/${pageId}/module`, moduleData)
+      error: PageData,
+    }, PageData>([resource, id], pageData);
   }
 
   return {
@@ -50,32 +50,10 @@ const cerateService = (resource: string) => {
     getOne,
     get,
     deleteOne,
-    addModule
+    update
   }
 }
 
-const service = cerateService("page");
+const service = initService("page");
 
 export default service;
-
-
-// export const create = (data: Partial<Omit<ModuleData, "id">>) => {
-//   return fetch.post<{
-//     data?: ModuleData,
-//     error?: {
-//       fields: { [key: string]: string }
-//     }
-//   }>(`/${RESOURCE}`, data);
-// }
-
-// export const update = (id: number, data: Partial<ModuleData>) => {
-//   return fetch.put<{ data?: ModuleData, error?: { message: string, fields: { [key: string]: string } } }>(`/${RESOURCE}/${id}`, data);
-// }
-
-// export const deleteOne = (id: number) => {
-//   return fetch.delete<{ data?: { deletedCount: number }, error?: { message: string } }>(`/${RESOURCE}/${id}`);
-// }
-
-// export const deleteAll = () => {
-//   return fetch.delete<{ data?: { deletedCount: number }, error?: { message: string } }>(`/${RESOURCE}`);
-// }

@@ -8,7 +8,7 @@ import Modal, {
   ModalFooter,
   ModalHeader,
 } from '@components/common/Modal'
-import modules from '@module-system/modules'
+import moduleLibrary from '@module-system/modules'
 
 interface Props extends Pick<ModalProps, "open" | "onClose"> {
   onSelect: (module: Module) => void;
@@ -28,8 +28,8 @@ const ModuleLibraryModal = ({ open, onClose, onSelect }: Props) => {
       [category: string]: Module[],
     } = {};
 
-    for (const key in modules) {
-      const module = modules[key];
+    for (const key in moduleLibrary) {
+      const module = moduleLibrary[key];
       const category = module.category || "Not specified"
 
       if (Array.isArray(result[category])) {
@@ -60,7 +60,7 @@ const ModuleLibraryModal = ({ open, onClose, onSelect }: Props) => {
   return (
     <Modal className="module-library-modal" onClose={onClose} open={open}>
       <ModalDialog className="module-library-modal__dialog">
-        <ModalHeader className="module-library-modal__header" title="Select module" subtitle="Select module in list" onClose={onClose} />
+        <ModalHeader className="module-library-modal__header" title="Select module" subtitle="Select a module from the list" onClose={onClose} />
         <ModalContent className="module-library-modal__content">
           <div className="module-library-modal__content-scroll">
             <ModuleLibrary modulesByCategory={modulesByCategory} onSelect={handleModuleLibrarySelect} selected={selected} />

@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
-import Panel, { PanelBody, PanelFooter, PanelHeader } from "@components/common/Panel"
+import Panel, { PanelBody, PanelHeader } from "@components/common/Panel"
 import { useEditor, useEditorState } from './Editor';
 import useModule from '@hooks/useModule';
-import { cloneDeep, debounce } from 'lodash';
 import Form from '@components/common/Form';
 import { FormProvider, useForm } from 'react-hook-form';
-import classNames from 'classnames';
-import Icon from '@components/common/Icon';
 import { useModuleProperties } from '@hooks/useModuleProperties';
 
 interface EditorModulePropertiesPanelProps {
@@ -41,8 +38,7 @@ const EditorModulePropertiesPanel = (props: EditorModulePropertiesPanelProps) =>
       timeoutId = window.setTimeout(() => {
         formMethods.reset(watchAllFields);
         submit();
-      }, 200);
-
+      }, 400);
     }
 
     return () => {
@@ -68,11 +64,6 @@ const EditorModulePropertiesPanel = (props: EditorModulePropertiesPanelProps) =>
             </Form>
           </FormProvider>
         </PanelBody>
-        {/* <PanelFooter>
-          <button onClick={submit} className={classNames("button button--shape-circle button--size-md button--type-solid", { "button--size-lg": formMethods.formState.isValid, "is-disabled": !formMethods.formState.isValid })}>
-            <Icon name="save" />
-          </button>
-        </PanelFooter> */}
       </>}
     </Panel>
   )

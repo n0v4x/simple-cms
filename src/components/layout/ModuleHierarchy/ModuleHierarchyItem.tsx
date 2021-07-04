@@ -1,12 +1,9 @@
-import { memo, MutableRefObject, ReactNode, useMemo, useState } from "react";
+import { memo, ReactNode, useMemo, useState } from "react";
 import classNames from "classnames";
-import { ModuleHierarchyGeneralProps } from "./ModuleHierarchy";
 
-import { MoreHorizontal, MoreVertical, Plus, ChevronDown, Trash } from "react-feather";
+import { Plus, ChevronDown, Trash } from "react-feather";
 import useModule from "@hooks/useModule";
-import PopupMenu from "@components/common/PopupMenu";
-import Icon from "@components/common/Icon";
-import Menu from "@components/common/Menu";
+
 
 
 interface ModuleHierarchyItemProps {
@@ -22,7 +19,6 @@ interface ModuleHierarchyItemProps {
 
 const ModuleHierarchyItem = ({ item, level, children, isSelected, hasChildren, onAdd, onDelete, onSelect }: ModuleHierarchyItemProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isPopupMenuActive, setIsPopupMenuActive] = useState(false);
   const module = useModule(item.module.id);
 
   if (!module) {
@@ -65,19 +61,6 @@ const ModuleHierarchyItem = ({ item, level, children, isSelected, hasChildren, o
             </p>
           </div>
 
-          {/* <div className="module-hierarchy-item__control-list">
-            <button onClick={() => setIsPopupMenuActive((oldState) => !oldState)} className="button">
-              <MoreVertical size="1em" />
-            </button>
-            <PopupMenu className="module-hierarchy-item__popup-menu" onClick={(id) => console.log("id")} show={true} items={[{ id: "add", label: "Add" }, { id: "delete", label: "Delete" }]} />
-          </div> */}
-          {/* <div className="module-hierarchy-item__popup">
-            <button className="button module-hierarchy-item__popup-btn">
-              <Icon name="more-vertical" />
-            </button>
-
-            <Menu onSelect={() => { }} popup items={[{ id: "delete", label: "Delete" }, { id: "add", label: "Add" }]} />
-          </div> */}
           <ul className="module-hierarchy-item__control-list list">
             <li className="module-hierarchy-item__control-item">
               <button onClick={onDelete} className="button">

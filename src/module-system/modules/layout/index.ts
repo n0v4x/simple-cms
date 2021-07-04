@@ -11,4 +11,5 @@ const layout: Module = {
   component: Layout,
 }
 
+
 export default layout;

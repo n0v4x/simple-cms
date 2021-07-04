@@ -1,9 +1,11 @@
 import backgroundImage from "./backgroundImage";
 import backgroundOverlay from "./backgroundOverlay";
+import height from "./height";
 
 const properties = {
-  "backgroundImage": backgroundImage,
-  "backgroundOverlay": backgroundOverlay
+  backgroundImage,
+  backgroundOverlay,
+  height
 }
 
 export default properties;

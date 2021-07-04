@@ -50,10 +50,6 @@ const EditorModuleLibraryModal = ({ }: EditorModuleLibraryModalProps) => {
     })
   }, []);
 
-  // const handleSelect = () => {
-
-  // }
-
   const handleSelect = useCallback(() => {
     const { category, moduleIndex } = selected;
     const { selectedPage } = editorState;
@@ -90,7 +86,7 @@ const EditorModuleLibraryModal = ({ }: EditorModuleLibraryModalProps) => {
   return (
     <Modal className="module-library-modal" onClose={editor.closeModuleLibraryModal} open={editorState.isModuleLibraryModalOpen}>
       <ModalDialog className="module-library-modal__dialog">
-        <ModalHeader className="module-library-modal__header" title="Select module" subtitle="Select module in list" onClose={editor.closeModuleLibraryModal} />
+        <ModalHeader className="module-library-modal__header" title="Select module" subtitle="Select a module from the list" onClose={editor.closeModuleLibraryModal} />
         <ModalContent className="module-library-modal__content">
           <div className="module-library-modal__content-scroll">
             <ModuleLibrary modulesByCategory={modulesByCategory} onSelect={handleModuleLibrarySelect} selected={selected} />

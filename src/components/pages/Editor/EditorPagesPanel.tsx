@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react'
-import Panel, { PanelBody, PanelFooter, PanelHeader } from "@components/common/Panel";
+import Panel, { PanelBody, PanelHeader } from "@components/common/Panel";
 import Icon from '@components/common/Icon';
 import Menu from '@components/common/Menu';
 import { useEditor, useEditorState } from './Editor';
 
-interface EditorPagesPanelProps {
-
-}
+interface EditorPagesPanelProps { }
 
 const popupMenuItems = [{ id: "delete", label: "Delete" }];
 
@@ -25,12 +23,6 @@ const EditorPagesPanel = (props: EditorPagesPanelProps) => {
     if (popupMenuItemId) {
       if (popupMenuItemId === "delete") {
         editor.deletePage(id);
-
-        // api.services.page.deleteOne(id).then(result => {
-        //   if (result.success === 1) {
-        //     editor.deletePage(id);
-        //   }
-        // })
       }
     }
   }

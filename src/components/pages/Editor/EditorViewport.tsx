@@ -17,6 +17,7 @@ const EditorViewport = (props: EditorViewportProps) => {
       <div className="editor__viewport-modules">
         <div style={{ transform: `scale(${scale})` }} className="editor__viewport-modules-scaler">
           <ModuleViewport
+            isEditorMode={editorState.viewMode === "editor"}
             onSelect={editor.selectModule}
             selected={editorState.selectedModuleId}
             showModulesBoundaries={editorState.viewMode === "editor"}

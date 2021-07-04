@@ -1,21 +1,27 @@
-import { CSSProperties, useMemo } from "react"
-import classNames from "classnames";
-
 import properties from "./properties";
+import styled, { css } from "styled-components";
 
 interface Container extends ModuleProps<ModulePropsProperties<typeof properties>> {
 }
 
-const Container = ({ children, properties, className, id }: Container) => {
-  const style: CSSProperties = useMemo(() => {
-    return {
-      maxWidth: properties.maxWidth
-    }
-  }, [properties]);
+const StyledContainer = styled.div<{ properties: ModulePropsProperties<typeof properties> }>`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 15px;
+  max-width: 992px;
+  margin: 0 auto; 
+  width: 100%;
 
-  return <div id={id} style={style} className={classNames("container", className)}>
-    {children}
-  </div>
+  ${({ properties }) => css`
+    max-width: ${properties.maxWidth};
+    justify-content:  ${properties.alignItems.horizontal};
+    align-items:  ${properties.alignItems.vertical};
+  `}
+`
+
+const Container = ({ ...otherProps }: Container) => {
+  return <StyledContainer {...otherProps} />
 }
 
 export default Container;

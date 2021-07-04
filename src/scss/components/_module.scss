@@ -1,16 +1,38 @@
 .module {
   $border-width: 4px;
 
-  display: flex;
-  flex-direction: column;
+  z-index: 1;
+  // display: flex;
+  // flex-direction: column;
 
-  flex: 1 1 auto;
-  height: 100%;
+  // flex: 1 1 auto;
+  // height: 100%;
 
-  border: $border-width solid $primary-color-lighter;
-  // box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
-  user-select: none;
-  cursor: pointer;
+  // border: $border-width solid $primary-color-lighter;
+  // user-select: none;
+  // cursor: pointer;
+
+  // &:hover {
+  //   box-shadow: 0 0 0 5px $primary-color-light;
+  // }
+
+  // &.is-selected {
+  //   box-shadow: 0 0 0 1px #fff, 0 0 0 5px #000;
+  // }
+
+  & *:not(&) {
+    pointer-events: none;
+  }
+
+  position: relative;
+
+  // &:before {
+  //   content: attr(data-module-id);
+  //   position: relative;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  // }
 
   &__inner {
     flex: 1 1 auto;
@@ -34,6 +56,7 @@
   &__body {
     min-height: 10px;
     flex: 1 1 auto;
+    pointer-events: none;
   }
 
   &.is-selected {

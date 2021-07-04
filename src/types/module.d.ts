@@ -11,9 +11,10 @@ interface ModuleData extends TreeDataItem {
 
 interface ModuleProps<P = any> {
   id?: string;
-  properties: P,
-  children?: ReactNode,
-  className?: string,
+  properties: P;
+  children?: ReactNode;
+  className?: string;
+  isEditorMode?: boolean;
 }
 
 interface ModulePropertiesItem {

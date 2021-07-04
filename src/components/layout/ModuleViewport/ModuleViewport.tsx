@@ -4,6 +4,7 @@ import ModuleViewportList from "./ModuleViewportList";
 export interface ModuleViewportGeneralProps {
   showModulesBoundaries?: boolean;
   onSelect?: (moduleId: ModuleData["id"]) => void
+  isEditorMode?: boolean;
 }
 
 interface ModuleViewportProps extends ModuleViewportGeneralProps {

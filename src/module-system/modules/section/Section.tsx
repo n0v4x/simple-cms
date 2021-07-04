@@ -1,39 +1,50 @@
-import background, { ModulePropertyBackgroundData } from "@module-system/properties/background";
-import { CSSProperties, ReactNode, useEffect, useMemo } from "react"
-import classNames from "classnames";
 import properties from "./properties";
-
+import styled, { css } from "styled-components";
 
 interface SectionProps extends ModuleProps<ModulePropsProperties<typeof properties>> {
 
 }
 
-const Section = ({ children, properties, className, id }: SectionProps) => {
-  const styles = useMemo(() => {
-    const { src, size, attachment } = properties.backgroundImage;
+const StyledSection = styled.section<{ properties: ModulePropsProperties<typeof properties> }>`
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 
-    const container: CSSProperties = {
-      backgroundImage: `url(${src})`,
-      backgroundSize: size,
-      backgroundAttachment: attachment,
-    }
+  ${({ properties }) => {
+    const { height, backgroundImage } = properties;
 
-    const overlay: CSSProperties = {
-      opacity: 1 - properties.backgroundOverlay.opacity,
-      backgroundColor: properties.backgroundOverlay.color
-    }
+    return css`
+      height: ${height};
+      background-image: url(${backgroundImage.src});
+      background-size: ${backgroundImage.size};
+      background-attachment: ${backgroundImage.attachment};
+    `
+  }}
+`
 
-    return {
-      container,
-      overlay
-    }
-  }, [properties]);
+const StyledSectionOverlay = styled.section<{ properties: ModulePropsProperties<typeof properties> }>`
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
 
+  ${({ properties }) => {
+    const { backgroundOverlay } = properties;
 
-  return <div id={id} style={styles.container} className={classNames("section", className)}>
-    <div style={styles.overlay} className="overlay" />
+    return css`
+      background-color: ${backgroundOverlay.color};
+      opacity: ${backgroundOverlay.opacity};
+    `
+  }}
+`
+
+const Section = ({ children, ...otherProps }: SectionProps) => {
+  return <StyledSection {...otherProps}>
+    <StyledSectionOverlay properties={otherProps.properties} />
     {children}
-  </div>
+  </StyledSection>
 }
 
 export default Section;

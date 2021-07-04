@@ -1,9 +1,9 @@
-import backgroundImage from "./backgroundImage";
-import backgroundOverlay from "./backgroundOverlay";
+import gap from "./gap";
+import alignItems from "./alignItems";
 
 const properties = {
-  "backgroundImage": backgroundImage,
-  "backgroundOverlay": backgroundOverlay
+  gap,
+  alignItems
 }
 
 export default properties;

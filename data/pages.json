@@ -5,11 +5,85 @@
     "title": "Home",
     "modules": [
       {
+        "id": 13,
+        "parentId": 8,
+        "module": {
+          "id": "container"
+        }
+      },
+      {
+        "id": 8,
+        "parentId": 0,
+        "module": {
+          "id": "header",
+          "properties": {
+            "backgroundOverlay": {
+              "color": "#fff",
+              "opacity": 0.2
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "parentId": 13,
+        "module": {
+          "id": "navbar",
+          "properties": {
+            "gap": "40px",
+            "alignItems": {
+              "horizontal": "center"
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "parentId": 9,
+        "module": {
+          "id": "nav-link",
+          "properties": {
+            "link": {
+              "label": "Home",
+              "href": "/"
+            }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "parentId": 9,
+        "module": {
+          "id": "nav-link",
+          "properties": {
+            "link": {
+              "label": "About",
+              "href": "/about"
+            }
+          }
+        }
+      },
+      {
+        "id": 12,
+        "parentId": 9,
+        "module": {
+          "id": "nav-link",
+          "properties": {
+            "link": {
+              "label": "Contacts",
+              "href": "/contacts"
+            }
+          }
+        }
+      },
+      {
         "id": 1,
         "parentId": 0,
         "module": {
           "id": "layout",
-          "properties": {}
+          "properties": {
+            "backgroundColor": "#fff"
+          }
         }
       },
       {
@@ -17,7 +91,16 @@
         "module": {
           "id": "section",
           "properties": {
-            "height": "100vh"
+            "height": "100vh",
+            "backgroundImage": {
+              "src": "/assets/1.jpg",
+              "size": "cover",
+              "attachment": "fixed"
+            },
+            "backgroundOverlay": {
+              "color": "#000",
+              "opacity": 0.45
+            }
           }
         },
         "parentId": 1
@@ -35,7 +118,16 @@
         "module": {
           "id": "section",
           "properties": {
-            "height": "100vh"
+            "height": "100vh",
+            "backgroundImage": {
+              "src": "/assets/2.jpg",
+              "size": "cover",
+              "attachment": "fixed"
+            },
+            "backgroundOverlay": {
+              "color": "#000",
+              "opacity": 0.45
+            }
           }
         },
         "parentId": 1
@@ -53,7 +145,16 @@
         "module": {
           "id": "section",
           "properties": {
-            "height": "100vh"
+            "height": "100vh",
+            "backgroundImage": {
+              "src": "/assets/3.jpg",
+              "size": "cover",
+              "attachment": "fixed"
+            },
+            "backgroundOverlay": {
+              "color": "#000",
+              "opacity": 0.45
+            }
           }
         },
         "parentId": 1

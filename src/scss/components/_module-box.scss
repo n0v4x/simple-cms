@@ -1,0 +1,45 @@
+.module-box {
+  $header-height: 15px;
+  $hover-color: rgb(49, 49, 49);
+  $selected-color: $primary-color;
+  $border-width: 5px;
+
+  opacity: 0;
+
+  position: absolute;
+  top: -($border-width + $header-height);
+  left: -$border-width;
+  bottom: -$border-width;
+  right: -$border-width;
+
+  border: $border-width solid $selected-color;
+
+  transition: all 0.2s;
+
+  &__header {
+    height: $header-height;
+    color: #000;
+    background-color: $selected-color;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: initial;
+  }
+
+  &.is-selected &__header {
+    background-color: $selected-color;
+  }
+
+  &.is-selected {
+    opacity: 0.8;
+  }
+
+  &__inner {
+    position: absolute;
+    top: $header-height;
+    left: -1px;
+    bottom: -1px;
+    right: -1px;
+    border: 1px solid #000;
+  }
+}

@@ -1,14 +1,14 @@
-import Navbar from "./Navbar";
+import NavBar from "./NavBar";
 import properties from "./properties";
 
-const layout: Module = {
+const navbar: Module = {
   id: "navbar",
   name: "Navbar",
-  description: "Navbar",
+  description: "Navigation bar",
   category: "layout",
   hasChildren: true,
   properties: properties,
-  component: Navbar,
+  component: NavBar,
 }
 
-export default layout;
+export default navbar;

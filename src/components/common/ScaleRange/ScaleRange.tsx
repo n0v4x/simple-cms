@@ -14,10 +14,6 @@ const ScaleRange = ({ onChange, min = 0.5, max = 1, step = 0.05, value }: ScaleR
     onChange(+e.target.value);
   }
 
-  // const zoomIn = () => {
-  //   onChange()
-  // }
-
   return (
     <div className="scale-range">
       <div className="scale-range__left">
